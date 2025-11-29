@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙️ Административная панель (Фронтенд)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* admin_styles.css */
+        #jsonEditor {
+            min-height: 500px; /* Увеличиваем высоту редактора */
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical; /* Разрешить вертикальное изменение размера */
+        }
+        .stage-list-group-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .stage-list-group-item.active {
+            background-color: #0d6efd !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">⚙️ Админ-панель: Управление Контентом (Фронтенд)</span>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            
+            <div class="col-lg-3 col-md-4">
+                <h3 class="mb-3 text-primary">📝 Управление Этапами</h3>
+                <p class="text-muted">Названия этапов взяты из локального справочника.</p>
+                <div class="list-group shadow-sm" id="stagesList">
+                    <p class="text-muted p-3">Загрузка...</p>
+                </div>
+            </div>
+
+            <div class="col-lg-9 col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-light">
+                        <h4 class="mb-0">Редактирование: <span id="currentStageTitle" class="text-secondary">Выберите этап</span></h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info" id="statusMessage" role="alert">
+                            Выберите этап слева для загрузки JSON.
+                        </div>
+                        
+                        <textarea id="jsonEditor" class="form-control mb-3 border-secondary" placeholder="JSON-диалог будет загружен сюда..." disabled></textarea>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-success btn-lg" id="saveButton" onclick="saveStageData()" disabled>
+                                💾 Сохранить изменения
+                            </button>
+                            <span id="saveStatus" class="ms-3 fs-5"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-5">
+
+                <h3 class="mb-3 text-success">🏆 Таблица Пользователей и Баллов</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover shadow-sm">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Пользователь</th>
+                                <th>Баллы</th>
+                                <th>Этап</th>
+                                <th>Обновление</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr><td colspan="6" class="text-center text-info">Нажмите кнопку для загрузки данных.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-outline-success mt-3" onclick="loadAllUsers()">
+                    ⬇️ Загрузить Таблицу Лидеров (/leaderboard/)
+                </button>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

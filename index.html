@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Социологический проект</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Анимированные частицы -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid">
+        <div class="d-flex ms-auto">
+          <div
+            class="user-badge text-light"
+            data-bs-toggle="modal"
+            data-bs-target="#leaderboardModal"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
+              />
+            </svg>
+            <span id="nickname-display">Пользователь</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Главная страница -->
+    <div class="page active" id="page1">
+      <section class="hero">
+        <div class="hero-content">
+          <h1 class="title-main">Социо ликбез —</h1>
+          <h2 class="title-sub">Студенческий проект в сфере социальных наук</h2>
+        </div>
+
+        <div class="cards-grid">
+          <div class="game-card">
+            <div class="card-icon-wrapper card-icon-blue">📚</div>
+            <h3 class="card-title">Теория и термины</h3>
+            <p class="card-desc">
+              Изучи основные понятия социологии и узнай о великих социологах
+            </p>
+            <div class="progress-bar-custom">
+              <div class="progress-fill" style="width: 60%"></div>
+            </div>
+            <p class="card-score">🏆 3 / 5</p>
+            <button
+              class="card-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#theoryModal"
+            >
+              Открыть этапы
+            </button>
+          </div>
+
+          <div class="game-card disabled-card">
+            <div class="card-icon-wrapper card-icon-green">💼</div>
+            <h3 class="card-title">Практические задачи</h3>
+            <p class="card-desc">
+              Решай реальные социологические задачи о труде, производстве и
+              активизме
+            </p>
+            <div class="progress-bar-custom">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            <p class="card-score">🏆 0 / 5</p>
+            <button
+              class="card-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#practiceModal"
+            >
+              Открыть этапы
+            </button>
+          </div>
+
+          <div class="game-card">
+            <div class="card-icon-wrapper card-icon-purple">📞</div>
+            <h3 class="card-title">Обратная связь</h3>
+            <p class="card-desc">Пройди опрос и помоги нам улучшить проект</p>
+            <div class="progress-bar-custom">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            <p class="card-score">Пишите</p>
+            <button
+              class="card-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#feedbackModal"
+            >
+              Пройти!
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Страница визуальной новеллы -->
+    <!-- Страница визуальной новеллы -->
+    <div class="page" id="page2">
+      <section class="visual-novel">
+        <div class="vn-controls">
+          <button class="vn-control-btn" onclick="skipText()">
+            Пропустить ▸▸
+          </button>
+          <button class="vn-control-btn vn-exit-btn" onclick="backToMenu()">
+            Выйти
+          </button>
+        </div>
+
+        <!-- Контейнер для персонажей -->
+        <div id="charactersContainer">
+          <div
+            id="char_A"
+            class="vn-character-sprite"
+            style="
+              background-image: url('');
+              width: 300px;
+              height: 450px;
+              opacity: 0;
+            "
+          ></div>
+          <div
+            id="char_B"
+            class="vn-character-sprite"
+            style="
+              background-image: url('');
+              width: 250px;
+              height: 400px;
+              opacity: 0;
+            "
+          ></div>
+        </div>
+
+        <div class="vn-textbox">
+          <div class="vn-nameplate" id="characterName">Профессор</div>
+          <div class="vn-dialogue-text" id="dialogueText">
+            Добро пожаловать в мир социологии!
+          </div>
+
+          <!-- Контейнер для кнопок выбора -->
+          <div id="choicesContainer"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Модальное окно имени -->
+    <div
+      class="modal fade"
+      id="nameModal"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">👋 Добро пожаловать!</h5>
+          </div>
+          <div class="modal-body">
+            <p
+              style="
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 1.05rem;
+                line-height: 1.6;
+              "
+            >
+              Пожалуйста, представьтесь, чтобы мы могли сохранить ваш прогресс и
+              баллы.
+            </p>
+            <input
+              type="text"
+              class="form-control bg-light text-black"
+              id="username-input"
+              placeholder="Введите ваше имя"
+              style="
+                background: rgba(255, 255, 255, 0.08);
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                color: #fff;
+                padding: 15px;
+                font-size: 1.05rem;
+                border-radius: 15px;
+                backdrop-filter: blur(10px);
+              "
+            />
+          </div>
+          <div class="modal-footer border-0">
+            <button
+              type="button"
+              class="btn"
+              id="save-name-button"
+              style="
+                background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+                color: white;
+                font-weight: 700;
+                padding: 12px 30px;
+                border-radius: 50px;
+                font-size: 1.05rem;
+                letter-spacing: 0.5px;
+              "
+            >
+              Сохранить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно лидерборда -->
+    <div class="modal fade" id="leaderboardModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">🏆 Таблица лидеров</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body leaderboard-container">
+            <table class="table text-center">
+              <thead></thead>
+              <tbody id="leaderboard-body">
+                <!-- Данные будут загружены из API через JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно теории -->
+    <div class="modal fade" id="theoryModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Теория: Этапы обучения</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div
+              class="liquid-glass-card mb-3"
+              style="position: relative; z-index: 1"
+            >
+              <p
+                style="
+                  color: rgba(255, 255, 255, 0.9);
+                  font-size: 1.05rem;
+                  margin: 0;
+                  position: relative;
+                  z-index: 2;
+                "
+              >
+                Начните увлекательное путешествие в мир социологии через
+                интерактивную визуальную новеллу!
+              </p>
+            </div>
+
+            <!-- Контейнер для этапов (будет заполнен JS) -->
+            <div class="stage-container">
+              <!-- Этапы будут добавлены динамически через renderTheoryStages() -->
+            </div>
+
+            <hr
+              style="border-color: rgba(255, 255, 255, 0.1); margin: 20px 0"
+            />
+
+            <button
+              class="btn btn-primary w-100"
+              onclick="startSurvey(1)"
+              data-bs-dismiss="modal"
+              style="
+                background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+                color: white;
+                font-weight: 700;
+                padding: 18px;
+                border-radius: 50px;
+                font-size: 1.1rem;
+                letter-spacing: 0.5px;
+                box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+                border: none;
+              "
+            >
+              Начать обучение (Новелла) →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"></script>
+    <script>
+      // Создание анимированных частиц
+      const particlesContainer = document.getElementById("particles");
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.animationDelay = Math.random() * 8 + "s";
+        particle.style.animationDuration = 5 + Math.random() * 5 + "s";
+        particlesContainer.appendChild(particle);
+      }
+
+      // window.addEventListener('DOMContentLoaded', () => {
+      //     const nameModal = new bootstrap.Modal(document.getElementById('nameModal'));
+      //     nameModal.show();
+      // });
+
+      // Сохранение имени
+      // document.getElementById('save-name-button').addEventListener('click', () => {
+      //     const username = document.getElementById('username-input').value.trim();
+      //     if (username) {
+      //         document.getElementById('nickname-display').textContent = username;
+      //         const nameModal = bootstrap.Modal.getInstance(document.getElementById('nameModal'));
+      //         nameModal.hide();
+      //     }
+      // });
+
+      // Функции для визуальной новеллы
+      function startSurvey() {
+        document.getElementById("page1").classList.remove("active");
+        document.getElementById("page2").classList.add("active");
+      }
+
+      function backToMenu() {
+        document.getElementById("page2").classList.remove("active");
+        document.getElementById("page1").classList.add("active");
+      }
+
+      function skipText() {
+        // Логика пропуска текста
+        console.log("Текст пропущен");
+      }
+
+      // Анимация прогресс-баров при скролле
+      const observerOptions = {
+        threshold: 0.5,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const progressFills =
+              entry.target.querySelectorAll(".progress-fill");
+            progressFills.forEach((fill) => {
+              const width = fill.style.width;
+              fill.style.width = "0%";
+              setTimeout(() => {
+                fill.style.width = width;
+              }, 100);
+            });
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".game-card").forEach((card) => {
+        observer.observe(card);
+      });
+    </script>
+    <script src="./script.js" defer></script>
+  </body>
+</html>
