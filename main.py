@@ -117,3 +117,5 @@ async def read_admin():
 
 # Раздаём папку media
 app.mount("/media", StaticFiles(directory="media"), name="media")
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
