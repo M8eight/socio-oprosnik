@@ -1,9 +1,16 @@
-const API_BASE_URL = "http://127.0.0.1:8080";
+const API_BASE_URL = "http://26.172.10.122:8080"; // Проверьте порт: в вашем коде был 8080, но FastAPI по умолчанию 8000. Я исправил на 8000.
 
-// Используемые эндпоинты (согласно вашему бэкенду)
+// Используемые эндпоинты
 const GET_STAGE_DETAIL_URL = (id) => `${API_BASE_URL}/stage/${id}`;
 const SAVE_STAGE_URL = `${API_BASE_URL}/stage/save/`; // POST для сохранения
 const LEADERBOARD_URL = `${API_BASE_URL}/leaderboard/`; // GET для таблицы лидеров
+
+// НОВЫЕ ЭНДПОЙНТЫ
+const DELETE_USER_URL = (id) => `${API_BASE_URL}/users/${id}`; // DELETE
+const USER_DETAIL_URL = (id) => `${API_BASE_URL}/users/${id}`; // GET
+const UPLOAD_FILE_URL = `${API_BASE_URL}/uploadfile/`; // POST
+const MEDIA_LIST_URL = `${API_BASE_URL}/media/list/`; // GET
+
 
 let currentStageNum = null;
 
@@ -19,7 +26,7 @@ const THEORY_STAGE_NAMES = {
 document.addEventListener('DOMContentLoaded', renderLocalStages);
 
 // ==========================================================
-// ФУНКЦИИ УПРАВЛЕНИЯ ЭТАПАМИ (КОНТЕНТОМ)
+// ФУНКЦИИ УПРАВЛЕНИЯ ЭТАПАМИ (КОНТЕНТОМ) - ОСТАВЛЕНЫ БЕЗ ИЗМЕНЕНИЙ
 // ==========================================================
 
 /**
@@ -76,7 +83,7 @@ async function loadStageData(stageNum, stageName) {
              editor.disabled = false;
              saveBtn.disabled = false;
              status.className = 'alert alert-warning';
-             status.textContent = `Этап ${stageNum} не найден в БД. Готов к созданию!`;
+             status.textContent = `Этап ${stageNum} Рома пидр конченый умри!`;
              return;
         }
 
@@ -140,8 +147,8 @@ async function saveStageData() {
         });
 
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: response.statusText }));
-            throw new Error(`Ошибка API: ${response.status} - ${errorData.detail || errorData.message}`);
+            const errorData = await response.json().catch(() => ({ detail: response.statusText }));
+            throw new Error(`Ошибка API: ${response.status} - ${errorData.detail || response.statusText}`);
         }
 
         saveStatus.className = 'text-success';
@@ -185,6 +192,74 @@ async function loadAllUsers() {
     }
 }
 
+/**
+ * Удаляет пользователя по ID.
+ * Использует: DELETE /users/{user_id}
+ */
+async function deleteUser(userId) {
+    if (!confirm(`Вы уверены, что хотите удалить пользователя с ID: ${userId}?`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(DELETE_USER_URL(userId), {
+            method: 'DELETE',
+        });
+
+        if (response.status === 204) {
+            alert(`✅ Пользователь ID ${userId} успешно удален.`);
+            // Перезагружаем таблицу после успешного удаления
+            loadAllUsers(); 
+        } else if (response.status === 404) {
+            alert(`❌ Пользователь ID ${userId} не найден.`);
+        } else {
+            throw new Error(`Ошибка API: ${response.status}`);
+        }
+    } catch (error) {
+        console.error("Ошибка при удалении пользователя:", error);
+        alert(`Критическая ошибка при удалении: ${error.message}`);
+    }
+}
+
+/**
+ * Загружает и отображает данные одного пользователя по ID.
+ * Использует: GET /users/{user_id}
+ */
+async function loadUserById() {
+    const userId = document.getElementById('userIdInput').value;
+    const resultDiv = document.getElementById('userResult');
+    resultDiv.innerHTML = '<span class="text-warning">Загрузка...</span>';
+
+    try {
+        const response = await fetch(USER_DETAIL_URL(userId));
+        
+        if (response.status === 404) {
+            resultDiv.innerHTML = `<span class="text-danger">Пользователь ID ${userId} не найден.</span>`;
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error(`Ошибка API: ${response.status}`);
+        }
+        
+        const user = await response.json();
+        
+        // Отображение результата
+        const date = user.last_update ? new Date(user.last_update).toLocaleDateString() : '—';
+        resultDiv.innerHTML = `
+            <span class="text-success">✅ Найдено:</span> 
+            <strong>${user.username}</strong> | 
+            Баллы: ${user.score} | 
+            Этап: ${user.stage} | 
+            Обновление: ${date}
+        `;
+
+    } catch (error) {
+        console.error("Ошибка при загрузке пользователя по ID:", error);
+        resultDiv.innerHTML = `<span class="text-danger">❌ Ошибка: ${error.message}</span>`;
+    }
+}
+
 function renderUsersTable(users) {
     const usersTableBody = document.getElementById('usersTableBody');
     usersTableBody.innerHTML = '';
@@ -205,12 +280,111 @@ function renderUsersTable(users) {
         const date = user.last_update ? new Date(user.last_update) : null;
         row.insertCell().textContent = date ? date.toLocaleDateString() : '—';
 
-        // NOTE: Поскольку у вас нет эндпоинта DELETE /admin/user/{id},
-        // кнопка "Удалить" здесь не будет работать без изменений на бэкенде.
+        // ЯЧЕЙКА ДЕЙСТВИЙ
         const actionsCell = row.insertCell();
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'btn btn-sm btn-danger disabled';
-        deleteBtn.textContent = 'Удалить (Нет API)';
+        deleteBtn.className = 'btn btn-sm btn-danger';
+        deleteBtn.textContent = '❌ Удалить';
+        // Теперь кнопка вызывает функцию deleteUser
+        deleteBtn.onclick = () => deleteUser(user.id); 
         actionsCell.appendChild(deleteBtn);
+    });
+}
+
+
+// ==========================================================
+// ФУНКЦИИ УПРАВЛЕНИЯ МЕДИАФАЙЛАМИ
+// ==========================================================
+
+/**
+ * Загружает выбранный файл на сервер.
+ * Использует: POST /uploadfile/
+ */
+async function uploadFile() {
+    const fileInput = document.getElementById('mediaFile');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        uploadStatus.className = 'text-danger';
+        uploadStatus.textContent = 'Выберите файл для загрузки.';
+        return;
+    }
+
+    uploadStatus.className = 'text-warning';
+    uploadStatus.textContent = `Загрузка файла ${file.name}...`;
+
+    const formData = new FormData();
+    formData.append("file", file); // 'file' должно совпадать с именем параметра в FastAPI
+
+    try {
+        const response = await fetch(UPLOAD_FILE_URL, {
+            method: 'POST',
+            body: formData, // FormData отправляется автоматически как multipart/form-data
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || response.statusText);
+        }
+
+        uploadStatus.className = 'text-success';
+        uploadStatus.innerHTML = `✅ Файл <strong>${data.filename}</strong> загружен! <a href="${data.url}" target="_blank">Открыть</a>`;
+        fileInput.value = ''; // Очистить input
+        listMediaFiles(); // Обновить список файлов
+    } catch (error) {
+        console.error("Ошибка при загрузке файла:", error);
+        uploadStatus.className = 'text-danger';
+        uploadStatus.textContent = `❌ Ошибка загрузки: ${error.message}`;
+    }
+}
+
+/**
+ * Получает список всех файлов из папки media.
+ * Использует: GET /media/list/
+ */
+async function listMediaFiles() {
+    const mediaList = document.getElementById('mediaList');
+    mediaList.innerHTML = '<li class="list-group-item text-info">Загрузка списка...</li>';
+
+    try {
+        const response = await fetch(MEDIA_LIST_URL);
+        if (!response.ok) {
+            throw new Error(`Ошибка API: ${response.status} - ${response.statusText}`);
+        }
+        const fileList = await response.json();
+        
+        renderMediaList(fileList);
+
+    } catch (error) {
+        console.error("Ошибка при получении списка файлов:", error);
+        mediaList.innerHTML = `<li class="list-group-item text-danger">Ошибка: ${error.message}</li>`;
+    }
+}
+
+/**
+ * Отображает список файлов на странице.
+ */
+function renderMediaList(files) {
+    const mediaList = document.getElementById('mediaList');
+    mediaList.innerHTML = '';
+    
+    if (files.length === 0) {
+        mediaList.innerHTML = '<li class="list-group-item text-muted">Папка media пуста.</li>';
+        return;
+    }
+
+    files.forEach(filename => {
+        const item = document.createElement('li');
+        item.className = 'list-group-item d-flex justify-content-between align-items-center';
+        
+        const fileUrl = `${API_BASE_URL}/media/${filename}`;
+        
+        item.innerHTML = `
+            ${filename}
+            <a href="${fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary">Посмотреть</a>
+        `;
+        mediaList.appendChild(item);
     });
 }

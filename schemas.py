@@ -56,3 +56,7 @@ class LeaderRead(LeaderCreate):
 
     class Config:
         from_attributes = True
+        
+class UserLookup(BaseModel):
+    """Схема для поиска пользователя по имени (используется для получения прогресса)."""
+    username: str
