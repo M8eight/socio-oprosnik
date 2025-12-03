@@ -224,6 +224,16 @@ function renderLeaderboard(leaders) {
     });
 }
 
+
+function num_word(value){  
+	value = Math.abs(value) % 100; 
+	var num = value % 10;
+	if(value > 10 && value < 20) return "очков"; 
+	if(num > 1 && num < 5) return "очка";
+	if(num == 1) return "очко"; 
+	return "очков";
+}
+
 // ============== ОБНОВЛЕНИЕ UI ================
 
 function updateUI(score, stage) {
@@ -234,21 +244,36 @@ function updateUI(score, stage) {
 
     const scoreDisplay = document.getElementById("score-display");
     if (scoreDisplay) {
-        scoreDisplay.textContent = `${score} очков`;
+        scoreDisplay.textContent = `${score} ${num_word(score)}`;
     }
 
+    // ───── Теория ─────
     const theoryCard = document.querySelector(".game-card .card-icon-blue")?.closest(".game-card");
     if (theoryCard) {
         const theoryProgressFill = theoryCard.querySelector("#theory-progress");
         const theoryScoreDisplay = theoryCard.querySelector("#theory-score");
 
-        const progressPercent = Math.min(stage, MAX_THEORY_STAGE) / MAX_THEORY_STAGE * 100;
+        const theoryCompleted = Math.min(stage, MAX_THEORY_STAGE);
+        const progressPercent = theoryCompleted / MAX_THEORY_STAGE * 100;
+
         if (theoryProgressFill) theoryProgressFill.style.width = `${progressPercent}%`;
-        if (theoryScoreDisplay) theoryScoreDisplay.textContent = `🏆 ${Math.min(stage, MAX_THEORY_STAGE)} / ${MAX_THEORY_STAGE}`;
+        if (theoryScoreDisplay) theoryScoreDisplay.textContent = `🏆 ${theoryCompleted} / ${MAX_THEORY_STAGE}`;
     }
 
+    // ───── Практика ─────
     const practiceCard = document.getElementById("practice-card");
     if (practiceCard) {
+        const practiceProgressFill = practiceCard.querySelector("#practice-progress");
+        const practiceScoreDisplay = practiceCard.querySelector("#practice-score");
+
+        // Сколько практических этапов пройдено
+        const practiceCompleted = Math.max(0, stage - MAX_THEORY_STAGE); // stage 1 = теория, 2-6 = практика
+        const practicePercent = Math.min(practiceCompleted, MAX_PRACTICE_STAGE) / MAX_PRACTICE_STAGE * 100;
+
+        if (practiceProgressFill) practiceProgressFill.style.width = `${practicePercent}%`;
+        if (practiceScoreDisplay) practiceScoreDisplay.textContent = `🏆 ${practiceCompleted} / ${MAX_PRACTICE_STAGE}`;
+
+        // Разблокировка карточки практики
         if (stage >= MAX_THEORY_STAGE) {
             practiceCard.classList.remove("disabled-card");
         } else {
@@ -256,6 +281,7 @@ function updateUI(score, stage) {
         }
     }
 
+    // Обновляем список этапов в модалке (если она открыта)
     const practiceModalElement = document.getElementById('practiceModal');
     if (practiceModalElement && practiceModalElement.classList.contains('show')) {
         renderPracticeStages();

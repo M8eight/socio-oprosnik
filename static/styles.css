@@ -1,17 +1,146 @@
+/* ===================== НОВАЯ ЦВЕТОВАЯ СХЕМА ===================== */
+
+:root {
+  --color-primary: rgb(17, 141, 145); /* Основной — Морская волна */
+  --color-accent-1: rgb(121, 69, 133); /* Фиолетовый */
+  --color-accent-2: rgb(197, 217, 46); /* Лаймово-зеленый */
+  --color-gradient-1: linear-gradient(
+    135deg,
+    rgb(17, 141, 145),
+    rgb(40, 160, 165)
+  );
+  --color-gradient-2: linear-gradient(
+    135deg,
+    rgb(121, 69, 133),
+    rgb(150, 90, 160)
+  );
+  --color-gradient-3: linear-gradient(
+    135deg,
+    rgb(197, 217, 46),
+    rgb(210, 230, 70)
+  );
+}
+
+/* Фон страницы */
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  overflow-x: hidden;
+  /* Градиент фона страницы из новых цветов */
+  background: linear-gradient(135deg, #101c23 0%, #152d3a 50%, #183e46 100%);
+  min-height: 100vh;
+}
+
+/* Все кнопки, бейджи, прогресс-бары — основной градиент */
+.user-badge,
+.card-btn,
+.vn-choice-btn,
+.vn-continue-btn,
+.stage-list-item .btn,
+#save-name-button,
+#feedback-button {
+  background: var(--color-gradient-1) !important;
+  border: 2px solid rgba(17, 141, 145, 0.4) !important;
+  box-shadow: 0 0 20px rgba(17, 141, 145, 0.4) !important;
+}
+
+.user-badge:hover,
+.card-btn:hover,
+.stage-list-item .btn:hover {
+  box-shadow: 0 0 40px rgba(17, 141, 145, 0.7) !important;
+  transform: translateY(-3px) scale(1.02);
+}
+
+/* Прогресс-бары */
+.progress-fill {
+  background: var(--color-gradient-1) !important;
+}
+
+/* Иконки карточек */
+.card-icon-blue {
+  background: var(--color-gradient-1);
+  box-shadow: 0 10px 30px rgba(17, 141, 145, 0.5);
+} /* Основной цвет */
+.card-icon-green {
+  background: var(--color-gradient-3);
+  box-shadow: 0 10px 30px rgba(197, 217, 46, 0.5);
+} /* Акцент 2 */
+.card-icon-purple {
+  background: var(--color-gradient-2);
+  box-shadow: 0 10px 30px rgba(121, 69, 133, 0.5);
+} /* Акцент 1 */
+
+/* Текст с градиентом (заголовки) */
+.title-main {
+  background: linear-gradient(
+    135deg,
+    #fff,
+    rgb(17, 141, 145),
+    rgb(197, 217, 46)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Навбар и модалки — лёгкий акцент */
+.navbar {
+  border-bottom: 1px solid rgba(17, 141, 145, 0.3);
+}
+
+.modal-content,
+.liquid-glass-card,
+.stage-list-item,
+.vn-textbox {
+  border-color: rgba(17, 141, 145, 0.3) !important;
+}
+
+/* Таблица лидеров — обновлённая под новую палитру */
+.liquid-leaderboard,
+.leaderboard-wrapper {
+  border-color: rgba(17, 141, 145, 0.4);
+}
+
+.leaderboard-table thead {
+  background: linear-gradient(
+    135deg,
+    rgba(17, 141, 145, 0.6),
+    rgba(121, 69, 133, 0.6)
+  );
+}
+
+.leaderboard-row.table-primary {
+  background: linear-gradient(
+    135deg,
+    rgba(17, 141, 145, 0.4),
+    rgba(121, 69, 133, 0.3)
+  ) !important;
+  border-left: 5px solid rgb(17, 141, 145) !important;
+  box-shadow: 0 0 30px rgba(17, 141, 145, 0.6) !important;
+}
+
+.table-warning {
+  border-left: 5px solid rgb(197, 217, 46);
+} /* Акцент 2 */
+.table-secondary {
+  border-left: 5px solid rgb(121, 69, 133);
+} /* Акцент 1 */
+.table-danger {
+  border-left: 5px solid rgb(17, 141, 145);
+} /* Основной */
+
+.player-score {
+  background: linear-gradient(135deg, #d4af37, #b8860b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* ==================== СБРОС И ОСНОВНЫЕ СТИЛИ ==================== */
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  overflow-x: hidden;
-  background: linear-gradient(135deg, #1e3a8a 0%, #312e81 50%, #581c87 100%);
-  min-height: 100vh;
 }
 
 /* Фикс для модальных окон (убираем padding-right) */
@@ -69,7 +198,7 @@ body.modal-open {
 .navbar {
   background: rgba(0, 0, 0, 0.4) !important;
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); -> заменено на основной цвет */
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3),
     inset 0 -1px 0 rgba(255, 255, 255, 0.1);
   padding: 12px 0;
@@ -113,8 +242,8 @@ body.modal-open {
 
 /* Бейджи пользователя */
 .user-badge {
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  /* background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%); -> заменено */
+  /* border: 2px solid rgba(255, 255, 255, 0.2); -> заменено */
   border-radius: 50px;
   padding: 8px 16px;
   display: flex;
@@ -141,16 +270,16 @@ body.modal-open {
 
 .user-badge:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);
+  box-shadow: 0 0 30px rgba(17, 141, 145, 0.6); /* Обновлено */
 }
 
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+    box-shadow: 0 0 20px rgba(17, 141, 145, 0.4); /* Обновлено */
   }
   50% {
-    box-shadow: 0 0 40px rgba(236, 72, 153, 0.8);
+    box-shadow: 0 0 40px rgba(17, 141, 145, 0.8); /* Обновлено */
   }
 }
 
@@ -176,7 +305,7 @@ body.modal-open {
   font-size: 4rem;
   font-weight: 900;
   margin-bottom: 20px;
-  background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+  /* background: linear-gradient(135deg, #fff 0%, #a78bfa 100%); -> заменено */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -201,7 +330,7 @@ body.modal-open {
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 30px;
-  color: #a5b4fc;
+  color: rgb(17, 141, 145); /* Обновлено */
   animation: slide-in 1s ease-out 0.2s backwards;
 }
 
@@ -239,6 +368,7 @@ body.modal-open {
   animation: fade-in-up 0.8s ease-out backwards;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  min-height: 550px;
 }
 
 .game-card:nth-child(1) {
@@ -287,10 +417,10 @@ body.modal-open {
   bottom: -2px;
   background: linear-gradient(
     45deg,
-    rgba(139, 92, 246, 0.3),
-    rgba(236, 72, 153, 0.3),
-    rgba(59, 130, 246, 0.3)
-  );
+    rgba(17, 141, 145, 0.3),
+    rgba(121, 69, 133, 0.3),
+    rgba(197, 217, 46, 0.3)
+  ); /* Обновлено */
   border-radius: 30px;
   z-index: -1;
   opacity: 0;
@@ -304,7 +434,7 @@ body.modal-open {
 
 .game-card:hover {
   transform: translateY(-15px) scale(1.02);
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(17, 141, 145, 0.3); /* Обновлено */
   border-color: rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.12);
 }
@@ -341,20 +471,8 @@ body.modal-open {
   }
 }
 
-.card-icon-blue {
-  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
-  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
-}
-
-.card-icon-green {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
-}
-
-.card-icon-purple {
-  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
-  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
-}
+/* Стили иконок - теперь используют переменные */
+/* .card-icon-blue, .card-icon-green, .card-icon-purple - стили перенесены в корневой блок */
 
 .card-title {
   font-size: 1.8rem;
@@ -383,7 +501,7 @@ body.modal-open {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  /* background: linear-gradient(90deg, #3b82f6, #8b5cf6); -> заменено */
   width: 0%;
   transition: width 1s ease;
   position: relative;
@@ -424,7 +542,7 @@ body.modal-open {
 
 .card-btn {
   width: 100%;
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  /* background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%); -> заменено */
   color: white;
   border: none;
   padding: 15px 30px;
@@ -459,7 +577,7 @@ body.modal-open {
 
 .card-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(236, 72, 153, 0.5);
+  box-shadow: 0 15px 40px rgba(17, 141, 145, 0.5); /* Обновлено */
 }
 
 .disabled-card {
@@ -472,7 +590,7 @@ body.modal-open {
 .liquid-glass-card {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(30px);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  /* border: 2px solid rgba(255, 255, 255, 0.1); -> заменено */
   border-radius: 25px;
   padding: 25px;
   position: relative;
@@ -536,7 +654,7 @@ body.modal-open {
 .modal-content {
   background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(40px);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  /* border: 2px solid rgba(255, 255, 255, 0.1); -> заменено */
   border-radius: 30px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -610,15 +728,15 @@ body.modal-open {
 
 /* Liquid Glass стиль для таблицы */
 .leaderboard-container {
-  padding: 0; /* Убрал padding, чтобы граница контейнера была видна */
+  padding: 0;
   border-radius: 20px;
   overflow: hidden;
-  /* Усиливаем "Стеклянный" эффект для всего контейнера */
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(17, 141, 145, 0.2); /* Обновлено */
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5),
     inset 0 0 10px rgba(255, 255, 255, 0.1);
+  
 }
 
 .table {
@@ -628,7 +746,7 @@ body.modal-open {
 }
 
 .table thead {
-  background: rgba(139, 92, 246, 0.3); /* Немного темнее */
+  background: rgba(17, 141, 145, 0.3); /* Обновлено */
   backdrop-filter: blur(15px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -641,17 +759,16 @@ body.modal-open {
   font-size: 0.95rem;
   padding: 20px 15px;
   border: none;
-  color: #a78bfa; /* Фиолетовый градиент */
+  color: rgb(197, 217, 46); /* Обновлено */
 }
 
 .table tbody tr {
-  /* Удаляем лишние border и background, используем родительский контейнер для эффекта */
-  background: rgba(255, 255, 255, 0.02); /* Максимально прозрачно */
-  border: none;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
-  overflow: hidden;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+    border: none;
+    /* transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); <- УДАЛЕНО (убираем плавный переход) */
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .table tbody tr::before {
@@ -665,24 +782,22 @@ body.modal-open {
     90deg,
     transparent,
     rgba(255, 255, 255, 0.15),
-    /* Более яркий блеск */ transparent
+    transparent
   );
   transition: left 0.6s ease;
-  z-index: 2; /* Поверх фона ячейки */
-}
-
-.table tbody tr:hover::before {
-  left: 100%;
+  z-index: 2;
 }
 
 .table tbody tr:hover {
-  background: rgba(139, 92, 246, 0.15); /* Более мягкое свечение */
-  transform: none; /* Убираем сдвиг, чтобы не выглядело "дерганно" */
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5); /* Более мягкая тень */
+    background: rgba(17, 141, 145, 0.15); /* Обновлено */
+    /* transform: none; <- УДАЛЕНО: transform: translateY(-3px) или scale(1.02) */
+    /* box-shadow: 0 0 15px rgba(17, 141, 145, 0.5); <- УДАЛЕНО: убираем "свечение" при наведении */
+    transform: none; /* Убедимся, что нет трансформации */
+    box-shadow: none; /* Убедимся, что нет тени при наведении */
 }
 
 .table tbody td {
-  background-color: transparent; /* Убедимся, что ячейки прозрачны */
+  background-color: transparent;
   color: white;
   padding: 15px;
   border: none;
@@ -690,62 +805,52 @@ body.modal-open {
   font-size: 1rem;
   position: relative;
   z-index: 3;
-  border-top: none; /* Убираем стандартные границы Bootstrap */
+  border-top: none;
 }
 
 .leaderboard-row.table-primary {
-  background: rgba(236, 72, 153, 0.2) !important; /* Яркий розовый фон */
-  border: 2px solid #ec4899 !important; /* Розовая граница */
-  box-shadow: 0 0 20px rgba(236, 72, 153, 0.7) !important; /* Сильное свечение */
+  background: rgba(17, 141, 145, 0.2) !important; /* Обновлено */
+  border: 2px solid rgb(17, 141, 145) !important; /* Обновлено */
+  box-shadow: 0 0 20px rgba(17, 141, 145, 0.7) !important; /* Обновлено */
   font-weight: 700;
 }
 
 .leaderboard-row.table-primary strong {
   color: #fff;
-  text-shadow: 0 0 5px #ec4899;
+  text-shadow: 0 0 5px rgb(17, 141, 145); /* Обновлено */
 }
 
 /* Медали и ранги */
 .rank-medal {
-  font-size: 1.8rem; /* Увеличил размер медалей */
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-  animation: floating-medal 4s ease-in-out infinite; /* Уникальная анимация */
-}
-
-@keyframes floating-medal {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px) scale(1.05);
-  }
+    font-size: 2rem;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+    /* animation: float 4s ease-in-out infinite; <- УДАЛЕНО */
 }
 
 .player-score {
   font-weight: 800;
-  color: #fcd34d; /* Золотистый цвет */
+  color: #fcd34d;
   font-size: 1.2rem;
   text-shadow: 0 0 15px rgba(252, 211, 77, 0.7);
 }
 
 /* Стили для 1, 2, 3 места */
 .table-warning {
-  /* 1-е место (желтый/золотой) */
-  background: rgba(252, 211, 77, 0.1) !important;
-  border-color: rgba(252, 211, 77, 0.5) !important;
+  /* 1-е место (Акцент 2) */
+  background: rgba(197, 217, 46, 0.1) !important; /* Обновлено */
+  border-color: rgba(197, 217, 46, 0.5) !important; /* Обновлено */
 }
 
 .table-secondary {
-  /* 2-е место (серый/серебро) */
-  background: rgba(156, 163, 175, 0.1) !important;
-  border-color: rgba(156, 163, 175, 0.5) !important;
+  /* 2-е место (Акцент 1) */
+  background: rgba(121, 69, 133, 0.1) !important; /* Обновлено */
+  border-color: rgba(121, 69, 133, 0.5) !important; /* Обновлено */
 }
 
 .table-danger {
-  /* 3-е место (красный/бронза) */
-  background: rgba(248, 113, 113, 0.1) !important;
-  border-color: rgba(248, 113, 113, 0.5) !important;
+  /* 3-е место (Основной) */
+  background: rgba(17, 141, 145, 0.1) !important; /* Обновлено */
+  border-color: rgba(17, 141, 145, 0.5) !important; /* Обновлено */
 }
 
 .rank-medal {
@@ -796,7 +901,7 @@ body.modal-open {
   margin: 0;
   position: relative;
   z-index: 100;
-  border-top: 2px solid rgba(139, 92, 246, 0.5);
+  border-top: 2px solid rgba(17, 141, 145, 0.5); /* Обновлено */
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
   min-height: 200px;
   animation: slide-up 0.5s ease-out;
@@ -814,7 +919,7 @@ body.modal-open {
 }
 
 .vn-nameplate {
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  background: var(--color-gradient-1); /* Обновлено */
   color: white;
   padding: 10px 30px;
   position: absolute;
@@ -823,7 +928,7 @@ body.modal-open {
   font-size: 1.3rem;
   font-weight: 700;
   border-radius: 10px 10px 0 0;
-  box-shadow: 0 -5px 20px rgba(236, 72, 153, 0.4);
+  box-shadow: 0 -5px 20px rgba(17, 141, 145, 0.4); /* Обновлено */
 }
 
 .vn-dialogue-text {
@@ -883,7 +988,7 @@ body.modal-open {
 .stage-list-item {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
-  border: 2px solid rgba(59, 130, 246, 0.3);
+  border: 2px solid rgba(17, 141, 145, 0.3); /* Обновлено */
   border-radius: 15px;
   padding: 20px;
   margin-bottom: 15px;
@@ -914,8 +1019,8 @@ body.modal-open {
 
 .stage-list-item:hover {
   transform: translateX(5px);
-  border-color: rgba(139, 92, 246, 0.5);
-  box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+  border-color: rgba(17, 141, 145, 0.5); /* Обновлено */
+  box-shadow: 0 5px 20px rgba(17, 141, 145, 0.3); /* Обновлено */
 }
 
 .stage-list-item h6 {
@@ -936,13 +1041,13 @@ body.modal-open {
 
 /* Пройденный этап */
 .stage-list-item.border-success {
-  border-color: rgba(34, 197, 94, 0.5) !important;
-  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(197, 217, 46, 0.5) !important; /* Обновлено (Акцент 2) */
+  background: rgba(197, 217, 46, 0.1); /* Обновлено */
 }
 
 .stage-list-item.border-success:hover {
-  border-color: rgba(34, 197, 94, 0.7) !important;
-  box-shadow: 0 5px 20px rgba(34, 197, 94, 0.3);
+  border-color: rgba(197, 217, 46, 0.7) !important; /* Обновлено */
+  box-shadow: 0 5px 20px rgba(197, 217, 46, 0.3); /* Обновлено */
 }
 
 /* Заблокированный этап */
@@ -955,7 +1060,7 @@ body.modal-open {
 
 /* Кнопки этапов */
 .stage-list-item .btn {
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  /* background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%); -> заменено */
   color: white;
   border: none;
   padding: 10px 25px;
@@ -969,7 +1074,7 @@ body.modal-open {
 
 .stage-list-item .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4);
+  box-shadow: 0 5px 15px rgba(17, 141, 145, 0.4); /* Обновлено */
 }
 
 .stage-placeholder {
@@ -1042,10 +1147,10 @@ body.modal-open {
 
 /* Кнопки выбора */
 .vn-choice-btn {
-  background: rgba(139, 92, 246, 0.2);
+  background: rgba(17, 141, 145, 0.2); /* Обновлено */
   backdrop-filter: blur(10px);
   color: white;
-  border: 2px solid rgba(139, 92, 246, 0.5);
+  border: 2px solid rgba(17, 141, 145, 0.5); /* Обновлено */
   padding: 18px 30px;
   font-size: 1.15rem;
   font-weight: 600;
@@ -1078,17 +1183,17 @@ body.modal-open {
 }
 
 .vn-choice-btn:hover {
-  background: rgba(139, 92, 246, 0.4);
-  border-color: rgba(236, 72, 153, 0.7);
+  background: rgba(17, 141, 145, 0.4); /* Обновлено */
+  border-color: rgba(121, 69, 133, 0.7); /* Обновлено (Акцент 1) */
   transform: translateX(5px);
-  box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 5px 20px rgba(17, 141, 145, 0.4); /* Обновлено */
 }
 
 /* Кнопка "Далее" */
 .vn-continue-btn {
   width: 100%;
   padding: 18px;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  /* background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); -> заменено */
   color: white;
   border: none;
   font-size: 1.2rem;
@@ -1096,13 +1201,18 @@ body.modal-open {
   cursor: pointer;
   border-radius: 15px;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 5px 20px rgba(197, 217, 46, 0.4); /* Обновлено (Акцент 2) */
+  background: var(--color-gradient-3) !important; /* Обновлено */
 }
 
 .vn-continue-btn:hover {
-  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  background: linear-gradient(
+    135deg,
+    rgb(180, 200, 30),
+    rgb(160, 180, 50)
+  ) !important; /* Более темный градиент Акцента 2 */
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(34, 197, 94, 0.6);
+  box-shadow: 0 8px 30px rgba(197, 217, 46, 0.6); /* Обновлено */
 }
 
 /* Индикатор печати */
@@ -1244,4 +1354,138 @@ body.modal-open {
   .navbar .d-flex {
     gap: 4px;
   }
+}
+
+/* ===================== НОВАЯ ТАБЛИЦА ЛИДЕРОВ — LIQUID GLASS (В КОНЦЕ ФАЙЛА) ===================== */
+
+.liquid-leaderboard {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(40px);
+  border: 2px solid rgba(17, 141, 145, 0.4); /* Обновлено */
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.leaderboard-wrapper {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 141, 145, 0.4); /* Обновлено */
+  box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.3),
+    0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.leaderboard-table {
+  margin-bottom: 0;
+  color: white;
+  background: transparent;
+}
+
+.leaderboard-table thead {
+  background: linear-gradient(
+    135deg,
+    rgba(17, 141, 145, 0.6),
+    rgba(121, 69, 133, 0.6)
+  ); /* Обновлено */
+  backdrop-filter: blur(10px);
+}
+
+.leaderboard-table th {
+  border: none;
+  padding: 18px 20px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #e0e7ff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.leaderboard-table tbody tr {
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* transition: all 0.4s ease; <- УДАЛЕНО (убираем плавный переход) */
+    position: relative;
+    overflow: hidden;
+    /* Сохраняем анимацию "скольжения" (shine) */
+}
+
+.leaderboard-table tbody tr::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.7s ease;
+}
+
+.leaderboard-table tbody tr:hover::before {
+  left: 100%;
+}
+.leaderboard-table tbody tr:hover {
+    background: rgba(17, 141, 145, 0.15); /* Обновлено */
+    /* transform: translateY(-2px); <- УДАЛЕНО */
+    /* box-shadow: 0 10px 25px rgba(17, 141, 145, 0.15); <- УДАЛЕНО */
+    transform: none; /* Убедимся, что нет трансформации */
+    box-shadow: none; /* Убедимся, что нет тени при наведении */
+}
+
+.leaderboard-table td {
+  border: none;
+  padding: 18px 20px;
+  vertical-align: middle;
+  font-weight: 600;
+  font-size: 1.05rem;
+  position: relative;
+  z-index: 1;
+}
+
+.rank-medal {
+    font-size: 1.5rem;
+    display: inline-block;
+    /* animation: bounce-slow 2s infinite; <- УДАЛЕНО */
+}
+
+/* Текущий игрок */
+.leaderboard-row.table-primary {
+  background: linear-gradient(
+    135deg,
+    rgba(17, 141, 145, 0.3),
+    rgba(121, 69, 133, 0.3)
+  ) !important; /* Обновлено */
+  border-left: 5px solid rgb(17, 141, 145) !important; /* Обновлено */
+  box-shadow: 0 0 30px rgba(17, 141, 145, 0.4) !important; /* Обновлено */
+  font-weight: 800;
+}
+
+/* Топ-3 */
+.table-warning {
+  background: rgba(197, 217, 46, 0.15) !important;
+  border-left: 5px solid rgb(197, 217, 46);
+} /* Акцент 2 */
+.table-secondary {
+  background: rgba(121, 69, 133, 0.15) !important;
+  border-left: 5px solid rgb(121, 69, 133);
+} /* Акцент 1 */
+.table-danger {
+  background: rgba(17, 141, 145, 0.15) !important;
+  border-left: 5px solid rgb(17, 141, 145);
+} /* Основной */
+
+.player-score {
+  font-weight: 800;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
