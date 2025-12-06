@@ -7,10 +7,12 @@ console.log("🌐 API Base URL:", API_BASE_URL); // Для отладки
 const LEADERBOARD_URL = `${API_BASE_URL}/leaderboard/`;
 const SUBMIT_SCORE_URL = `${API_BASE_URL}/submit-score/`;
 const GET_STAGE_URL = (stageNum) => `${API_BASE_URL}/stage/${stageNum}`;
-const GET_PROGRESS_BASE_URL = `${API_BASE_URL}/get-progress/`; 
+const GET_PROGRESS_BASE_URL = `${API_BASE_URL}/get-progress/`;
 
 const MAX_THEORY_STAGE = 1;
 const MAX_PRACTICE_STAGE = 5;
+// Общее количество этапов
+const MAX_TOTAL_STAGE = MAX_THEORY_STAGE + MAX_PRACTICE_STAGE;
 
 let globalUserScore = 0;
 let globalUserStage = 0;
@@ -32,6 +34,26 @@ let dynamicCharElements = {};
 
 let currentCallback = null;
 let currentQuestionSpeed = 30;
+
+const ANSWER_REWARD = 50;
+const STAGE_REWARD = 100;
+
+function isStageRewardTaken(stageIndex) {
+    const taken = JSON.parse(localStorage.getItem("rewardedStages") || "[]");
+    return taken.includes(stageIndex);
+}
+
+function isStageAlreadyCompleted(stageIndex) {
+    return stageIndex <= globalUserStage;
+}
+
+function markStageRewardTaken(stageIndex) {
+    const taken = JSON.parse(localStorage.getItem("rewardedStages") || "[]");
+    if (!taken.includes(stageIndex)) {
+        taken.push(stageIndex);
+        localStorage.setItem("rewardedStages", JSON.stringify(taken));
+    }
+}
 
 // ============== ФУНКЦИИ ВЗАИМОДЕЙСТВИЯ С API ================
 
@@ -225,13 +247,13 @@ function renderLeaderboard(leaders) {
 }
 
 
-function num_word(value){  
-	value = Math.abs(value) % 100; 
-	var num = value % 10;
-	if(value > 10 && value < 20) return "очков"; 
-	if(num > 1 && num < 5) return "очка";
-	if(num == 1) return "очко"; 
-	return "очков";
+function num_word(value) {
+    value = Math.abs(value) % 100;
+    var num = value % 10;
+    if (value > 10 && value < 20) return "очков";
+    if (num > 1 && num < 5) return "очка";
+    if (num == 1) return "очко";
+    return "очков";
 }
 
 // ============== ОБНОВЛЕНИЕ UI ================
@@ -267,7 +289,7 @@ function updateUI(score, stage) {
         const practiceScoreDisplay = practiceCard.querySelector("#practice-score");
 
         // Сколько практических этапов пройдено
-        const practiceCompleted = Math.max(0, stage - MAX_THEORY_STAGE); // stage 1 = теория, 2-6 = практика
+        const practiceCompleted = Math.max(0, stage - MAX_THEORY_STAGE);
         const practicePercent = Math.min(practiceCompleted, MAX_PRACTICE_STAGE) / MAX_PRACTICE_STAGE * 100;
 
         if (practiceProgressFill) practiceProgressFill.style.width = `${practicePercent}%`;
@@ -307,21 +329,21 @@ function renderPracticeStages() {
     const isTheoryCompleted = globalUserStage >= MAX_THEORY_STAGE;
 
     practiceStageNames.forEach((name, index) => {
-        const stageNum = index + MAX_THEORY_STAGE + 1; 
-        
+        const stageNum = index + MAX_THEORY_STAGE + 1;
+
         const isCompleted = globalUserStage >= stageNum;
 
-        const IS_PRACTICE_START = (stageNum === (MAX_THEORY_STAGE + 1)); 
+        const IS_PRACTICE_START = (stageNum === (MAX_THEORY_STAGE + 1));
 
         let isAvailable = isCompleted || (
-             (IS_PRACTICE_START && globalUserStage === MAX_THEORY_STAGE) || 
-             (stageNum === globalUserStage + 1)                             
+            (IS_PRACTICE_START && globalUserStage === MAX_THEORY_STAGE) ||
+            (stageNum === globalUserStage + 1)
         );
-        
+
         if (!isTheoryCompleted) {
             isAvailable = false;
         }
-        
+
         const isDisabled = !isAvailable;
 
         const item = document.createElement("div");
@@ -459,14 +481,27 @@ async function startPractice(stageNum) {
 function showQuestion(index) {
     currentQuestionIndex = index;
     const question = currentStageQuestions[index];
-    if (!question) { return; }
+    if (!question) {
+        console.error(`❌ Вопрос с индексом ${index} не найден!`);
+        return;
+    }
+
     const nameplate = document.getElementById("characterName");
     if (nameplate) nameplate.textContent = question.character;
+
     const choicesContainer = document.getElementById("choicesContainer");
-    if (choicesContainer) { choicesContainer.innerHTML = ""; choicesContainer.style.display = "none"; }
+    if (choicesContainer) {
+        choicesContainer.innerHTML = "";
+        choicesContainer.style.display = "none";
+    }
+
     const visibleChars = question.visibleCharacters || (question.character ? [question.character] : []);
     setCharactersPosition(visibleChars);
-    if (question.emotion) { updateCharacterSprite(question.character, question.emotion); }
+
+    if (question.emotion) {
+        updateCharacterSprite(question.character, question.emotion);
+    }
+
     for (const charID in dynamicCharElements) {
         const charElement = dynamicCharElements[charID];
         const charName = Object.keys(dynamicCharacterMap).find(key => dynamicCharacterMap[key] === charID);
@@ -476,6 +511,7 @@ function showQuestion(index) {
             charElement.classList.remove('active-speaker');
         }
     }
+
     const dialogueText = document.getElementById("dialogueText");
     const textSpeed = question.speed || 30;
     if (dialogueText) {
@@ -500,7 +536,9 @@ function typeText(text, element, callback, speed = 30) {
     currentCallback = callback;
     currentQuestionSpeed = speed;
     const textboxEl = document.querySelector(".vn-textbox");
-    textboxEl.classList.add("typing");
+    if (textboxEl) {
+        textboxEl.classList.add("typing");
+    }
     function type() {
         if (index < substitutedText.length) {
             element.textContent += substitutedText[index];
@@ -508,7 +546,9 @@ function typeText(text, element, callback, speed = 30) {
             typingTimeout = setTimeout(type, currentQuestionSpeed);
         } else {
             isTyping = false;
-            textboxEl.classList.remove("typing");
+            if (textboxEl) {
+                textboxEl.classList.remove("typing");
+            }
             if (currentCallback) currentCallback();
             currentCallback = null;
         }
@@ -533,17 +573,78 @@ function skipText() {
 
 function showChoices() {
     const question = currentStageQuestions[currentQuestionIndex];
+    if (!question) {
+        console.error("❌ Не удалось найти текущий вопрос в showChoices!");
+        return;
+    }
+
     const container = document.getElementById("choicesContainer");
+    if (!container) {
+        console.error("❌ Контейнер choicesContainer не найден!");
+        return;
+    }
+
     container.innerHTML = "";
     container.style.display = "flex";
+
     if (question.isEnd) {
+        // ИСПРАВЛЕНИЕ: Показываем кнопку завершения этапа
         const endButton = document.createElement("button");
         endButton.className = "vn-continue-btn";
-        endButton.textContent = "Вернуться в меню";
-        endButton.onclick = () => { backToMenu(); };
+        endButton.textContent = "Завершить этап";
+        endButton.onclick = async () => {
+            
+            let stageToSubmit = globalUserStage;
+            let scoreChange = 0;
+            const stageRewardTaken = isStageRewardTaken(currentStageIndex);
+
+            // 🌟 ИСПРАВЛЕНИЕ: ЛОГИКА НАЧИСЛЕНИЯ БОНУСА ЗА ЭТАП 🌟
+            // Начисляем бонус, если это новый этап и бонус за него еще не был взят
+            if (currentStageIndex > globalUserStage && !stageRewardTaken) {
+                scoreChange = STAGE_REWARD;
+                globalUserScore += scoreChange;
+                stageToSubmit = currentStageIndex; // Обновляем прогресс этапов
+                markStageRewardTaken(currentStageIndex);
+                console.log(`🎉 Этап ${currentStageIndex} завершён! Начислено +${STAGE_REWARD} очков.`);
+            } else if (currentStageIndex > globalUserStage) {
+                // Если этап пройден, но награда уже взята, просто обновим globalUserStage
+                stageToSubmit = currentStageIndex;
+            }
+
+            // Обновляем прогресс перед возвратом
+            await submitScore(globalUserScore, stageToSubmit);
+
+            // Скрываем VN-интерфейс
+            document.getElementById("page2").classList.remove("active");
+
+            const IS_LAST_STAGE = currentStageIndex === MAX_TOTAL_STAGE; 
+            if (IS_LAST_STAGE && stageToSubmit === currentStageIndex) {
+                 showPrizeModal(PRIZE_LINK_URL);
+            }
+
+            backToMenu();
+        };
         container.appendChild(endButton);
         return;
     }
+
+    if (!question.choices || question.choices.length === 0) {
+        console.warn("⚠️ У вопроса нет choices! Добавляем кнопку продолжения.");
+        const continueButton = document.createElement("button");
+        continueButton.className = "vn-continue-btn";
+        continueButton.textContent = "Продолжить";
+        continueButton.onclick = () => {
+            const nextIndex = currentQuestionIndex + 1;
+            if (nextIndex < currentStageQuestions.length) {
+                showQuestion(nextIndex);
+            } else {
+                backToMenu();
+            }
+        };
+        container.appendChild(continueButton);
+        return;
+    }
+
     question.choices.forEach((choice) => {
         const button = document.createElement("button");
         button.className = "vn-choice-btn";
@@ -553,7 +654,13 @@ function showChoices() {
             if (question.type === "quiz") {
                 handleQuizAnswer(choice, question);
             } else {
-                showQuestion(choice.next);
+                const nextIndex = choice.next;
+                if (nextIndex >= 0 && nextIndex < currentStageQuestions.length) {
+                    showQuestion(nextIndex);
+                } else {
+                    console.error(`❌ Индекс next (${nextIndex}) выходит за границы массива вопросов!`);
+                    backToMenu();
+                }
             }
         };
         container.appendChild(button);
@@ -562,7 +669,7 @@ function showChoices() {
 
 // ============== ОБРАБОТКА ОТВЕТА НА КВИЗ ================
 
-function handleQuizAnswer(choice, question) {
+async function handleQuizAnswer(choice, question) {
     const container = document.getElementById("choicesContainer");
     container.innerHTML = "";
     container.style.display = "none";
@@ -572,41 +679,127 @@ function handleQuizAnswer(choice, question) {
     const nextStepIndex = choice.next;
     let stageToSubmit = globalUserStage;
 
-    if (choice.isCorrect) {
-        scoreChange = 50;
-        responseText = "🎉 " + question.correctResponse;
-
-        if (question.isLastQuiz) {
-            if (currentStageIndex > globalUserStage) {
-                stageToSubmit = currentStageIndex;
-                responseText += ` 🎊 Поздравляем! Этап ${currentMode === "theory" ? currentStageIndex : currentStageIndex - MAX_THEORY_STAGE} пройден!`;
-            }
-        }
-    } else {
-        responseText = "❌ " + question.wrongResponse;
+    // 🌟 ИСПРАВЛЕНИЕ: УБРАНА ЛОГИКА STAGE_REWARD. Теперь она в showChoices.
+    
+    // ✅ ЕСЛИ ЭТО КВИЗ И ОТВЕТ ПРАВИЛЬНЫЙ → +50
+    if (choice.isCorrect === true) {
+        scoreChange += ANSWER_REWARD;
+        responseText = "🎉 " + (question.correctResponse || "Правильно!");
+    } else if (choice.isCorrect === false) {
+         responseText = "❌ " + (question.wrongResponse || "Неправильно!");
     }
 
     const newScore = globalUserScore + scoreChange;
 
-    submitScore(newScore, stageToSubmit);
+    // ✅ сразу обновляем локально
+    globalUserScore = newScore;
 
-    typeText(responseText, document.getElementById("dialogueText"), () => {
+    // ✅ отправляем на сервер
+    await submitScore(newScore, stageToSubmit);
+
+    typeText(responseText || "Продолжаем...", document.getElementById("dialogueText"), () => {
         const nextButton = document.createElement("button");
         nextButton.className = "vn-continue-btn";
         nextButton.textContent = "Далее ▸";
 
         nextButton.onclick = () => {
-            const nextQuestion = currentStageQuestions[nextStepIndex];
-            if (nextStepIndex === 0 || (nextQuestion && nextQuestion.isEnd)) {
-                backToMenu();
+            if (nextStepIndex >= 0 && nextStepIndex < currentStageQuestions.length) {
+                const nextQuestion = currentStageQuestions[nextStepIndex];
+
+                if (nextQuestion && nextQuestion.isEnd) {
+                    // Если следующий шаг — это конец, не переходим к нему, а показываем финальную кнопку
+                    showChoices(); 
+                } else {
+                    showQuestion(nextStepIndex);
+                }
             } else {
-                showQuestion(nextStepIndex);
+                backToMenu();
             }
         };
 
         container.style.display = "flex";
         container.appendChild(nextButton);
     });
+}
+
+
+
+// ============== УПРАВЛЕНИЕ СУНДУКОМ (С частицами/свечением) ================
+
+let isChestOpen = false;
+const PRIZE_LINK_URL = "https://example.com/your-secret-prize-link"; // Вынесем ссылку для удобства
+
+function openChest() {
+    if (isChestOpen) return;
+    isChestOpen = true; // Сразу ставим флаг, чтобы избежать двойного клика
+
+    const chestImage = document.getElementById('chest-image');
+    const prizeLink = document.getElementById('prizeLink');
+    const placeholder = document.getElementById('chest-placeholder');
+    const container = document.getElementById('chest-animation-container'); // Используем контейнер
+
+    if (chestImage && container) {
+        
+        // 1. Запускаем анимацию частиц на контейнере
+        container.classList.add('is-opening');
+        
+        // 2. Убираем анимацию покачивания и запускаем анимацию "открытия" (выпрыгивание) на спрайте
+        chestImage.classList.remove('chest-initial-animation');
+        chestImage.classList.add('chest-open-bounce');
+        
+        // 3. Смена спрайта и показ ссылки через небольшой таймаут (0.5 секунды)
+        setTimeout(() => {
+            chestImage.src = 'static/chest2.png'; // Меняем спрайт на открытый
+            
+            // Удаляем классы открытия и добавляем финальный вид
+            chestImage.classList.remove('chest-open-bounce'); 
+            chestImage.classList.add('chest-final-open'); 
+
+            // Удаляем класс частиц, чтобы анимация не повторялась
+            container.classList.remove('is-opening'); 
+        
+            if (prizeLink) {
+                prizeLink.style.display = 'inline-block'; // Показываем кнопку-ссылку
+            }
+        }, 500); // 500ms = время анимации chest-open-bounce
+    }
+
+    if (container) {
+        container.style.cursor = 'default';
+    }
+}
+
+// Корректируем showPrizeModal для инициализации закрытого сундука
+function showPrizeModal(link) {
+    const prizeModalElement = document.getElementById('prizeModal');
+    if (!prizeModalElement) return;
+
+    const prizeLinkElement = document.getElementById('prizeLink');
+    if (prizeLinkElement) {
+        prizeLinkElement.href = link || PRIZE_LINK_URL;
+        prizeLinkElement.style.display = 'none'; // Скрываем кнопку изначально
+    }
+
+    const chestImage = document.getElementById('chest-image');
+    const container = document.getElementById('chest-animation-container');
+
+    if (chestImage) {
+        chestImage.src = 'static/chest.png'; // Убеждаемся, что спрайт закрыт
+        chestImage.classList.add('chest-initial-animation'); // Запускаем покачивание
+        // Убеждаемся, что все классы открытия удалены
+        chestImage.classList.remove('chest-open-bounce', 'chest-final-open'); 
+    }
+    
+    if (container) {
+         container.classList.remove('is-opening'); // Сбрасываем частицы
+         container.style.cursor = 'pointer'; // Устанавливаем курсор для клика
+    }
+
+
+    isChestOpen = false;
+
+    const prizeModal = new bootstrap.Modal(prizeModalElement);
+    prizeModal.show();
 }
 
 // ============== ВОЗВРАТ В МЕНЮ ================
@@ -622,6 +815,7 @@ function backToMenu() {
     currentStageQuestions = [];
     currentStageCharacters = {};
 
+    // ИСПРАВЛЕНИЕ: Обновляем UI с актуальными данными после возврата
     updateUI(globalUserScore, globalUserStage);
 }
 
@@ -640,7 +834,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    const handleSaveName = () => {
+    const handleSaveName = async () => {
         if (!usernameInput) return;
         const newName = usernameInput.value.trim();
         if (newName) {
@@ -649,8 +843,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const nicknameDisplay = document.getElementById("nickname-display");
             if (nicknameDisplay) nicknameDisplay.textContent = newName;
             if (nameModalBootstrap) nameModalBootstrap.hide();
-            
-            submitScore(0, 0);
+
+            // Отправляем начальный прогресс
+            await submitScore(0, 0);
         } else {
             alert("Пожалуйста, введите имя!");
         }
@@ -685,19 +880,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const textbox = document.querySelector(".vn-textbox");
     if (textbox) {
-        textbox.addEventListener("click", function (e) {
-            if (e.target.classList.contains("vn-choice-btn") ||
-                e.target.classList.contains("vn-continue-btn")) {
-                return;
-            }
-            skipText();
-        });
-    }
-
-    const feedbackBtn = document.getElementById("feedback-button");
-    if (feedbackBtn) {
-        feedbackBtn.onclick = function () {
-            window.open("ВАША_ССЫЛКА_НА_GOOGLE_ФОРМУ", "_blank");
-        };
+        textbox.addEventListener("click", skipText);
     }
 });
