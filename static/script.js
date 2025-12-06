@@ -481,18 +481,61 @@ async function startPractice(stageNum) {
 function showQuestion(index) {
     currentQuestionIndex = index;
     const question = currentStageQuestions[index];
+    
     if (!question) {
         console.error(`❌ Вопрос с индексом ${index} не найден!`);
         return;
     }
 
-    const nameplate = document.getElementById("characterName");
-    if (nameplate) nameplate.textContent = question.character;
-
+    const overlayBg = document.getElementById("game-overlay-bg");
+    const overlayPanel = document.getElementById("game-overlay-panel");
+    const overlayText = document.getElementById("overlay-text");
     const choicesContainer = document.getElementById("choicesContainer");
+    const dialogueBox = document.querySelector(".vn-textbox"); 
+
+    // === ЛОГИКА OVERLAY ===
+    if (question.overlay) {
+        // Показываем оверлей (фон + панель)
+        if (overlayBg) overlayBg.style.display = "block";
+        if (overlayPanel) overlayPanel.style.display = "block";
+        if (overlayText) overlayText.textContent = question.overlay;
+        
+        // Переводим кнопки в режим "поверх"
+        if (choicesContainer) {
+            choicesContainer.classList.add("overlay-active-choices");
+        }
+
+        // vn-textbox остаётся видимым
+        if (dialogueBox) {
+            dialogueBox.style.display = "block";
+            dialogueBox.style.opacity = "1";
+        }
+
+    } else {
+        // Выключаем оверлей
+        if (overlayBg) overlayBg.style.display = "none";
+        if (overlayPanel) overlayPanel.style.display = "none";
+        
+        // Возвращаем кнопки в обычное состояние
+        if (choicesContainer) {
+            choicesContainer.classList.remove("overlay-active-choices");
+        }
+
+        // Возвращаем диалог
+        if (dialogueBox) {
+            dialogueBox.style.display = "block";
+            dialogueBox.style.opacity = "1";
+        }
+    }
+    // ======================
+
+    const nameplate = document.getElementById("characterName");
+    if (nameplate) nameplate.textContent = question.character || "";
+
+    // Очищаем и скрываем кнопки перед генерацией новых
     if (choicesContainer) {
         choicesContainer.innerHTML = "";
-        choicesContainer.style.display = "none";
+        choicesContainer.style.display = "none"; 
     }
 
     const visibleChars = question.visibleCharacters || (question.character ? [question.character] : []);
@@ -502,6 +545,7 @@ function showQuestion(index) {
         updateCharacterSprite(question.character, question.emotion);
     }
 
+    // Подсветка персонажа
     for (const charID in dynamicCharElements) {
         const charElement = dynamicCharElements[charID];
         const charName = Object.keys(dynamicCharacterMap).find(key => dynamicCharacterMap[key] === charID);
@@ -514,10 +558,18 @@ function showQuestion(index) {
 
     const dialogueText = document.getElementById("dialogueText");
     const textSpeed = question.speed || 30;
-    if (dialogueText) {
+    
+    // Если есть текст — печатаем. Если нет — сразу кнопки.
+    if (question.text && dialogueText) {
         typeText(question.text, dialogueText, () => {
+            if (choicesContainer) choicesContainer.style.display = "flex";
             showChoices();
         }, textSpeed);
+    } else {
+        // Если текста нет, сразу показываем кнопки
+        if (dialogueText) dialogueText.textContent = "";
+        if (choicesContainer) choicesContainer.style.display = "flex";
+        showChoices();
     }
 }
 

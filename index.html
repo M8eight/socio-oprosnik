@@ -415,6 +415,11 @@
 
     <div class="page" id="page2">
       <section class="visual-novel">
+        <div id="game-overlay-bg"></div>
+        <div id="game-overlay-panel">
+          <div id="overlay-text"></div>
+        </div>
+
         <div class="vn-controls">
           <button class="vn-control-btn" onclick="skipText()">
             Пропустить ▸▸
@@ -593,30 +598,60 @@
       </div>
     </div>
 
-<div class="modal fade" id="prizeModal" tabindex="-1" aria-labelledby="prizeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-center bg-dark text-white border-warning border-3">
-            <div class="modal-header border-bottom border-warning">
-                <h5 class="modal-title w-100 text-warning" id="prizeModalLabel">
-                    <i class="fas fa-trophy"></i> ГРАНДИОЗНОЕ ЗАВЕРШЕНИЕ!
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p class="lead">Вы успешно завершили все этапы обучения и практики!</p>
+    <div
+      class="modal fade"
+      id="prizeModal"
+      tabindex="-1"
+      aria-labelledby="prizeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-content text-center bg-dark text-white border-warning border-3"
+        >
+          <div class="modal-header border-bottom border-warning">
+            <h5 class="modal-title w-100 text-warning" id="prizeModalLabel">
+              <i class="fas fa-trophy"></i> ГРАНДИОЗНОЕ ЗАВЕРШЕНИЕ!
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="lead">
+              Вы успешно завершили все этапы обучения и практики!
+            </p>
 
-                <div id="chest-animation-container" class="my-4" onclick="openChest()"> 
-                    <img src="static/chest.png" alt="Сундук с призом" id="chest-image" class="chest-initial-animation"> 
-                </div>
-                
-                <a id="prizeLink" href="#" target="_blank" class="btn btn-lg btn-success pulse-animation mt-3" style="display: none;">
-                    Получить секретный приз!
-                </a>
-                <p class="small mt-2">Ссылка откроется в новой вкладке.</p>
+            <div
+              id="chest-animation-container"
+              class="my-4"
+              onclick="openChest()"
+            >
+              <img
+                src="static/chest.png"
+                alt="Сундук с призом"
+                id="chest-image"
+                class="chest-initial-animation"
+              />
             </div>
+
+            <a
+              id="prizeLink"
+              href="#"
+              target="_blank"
+              class="btn btn-lg btn-success pulse-animation mt-3"
+              style="display: none"
+            >
+              Получить секретный приз!
+            </a>
+            <p class="small mt-2">Ссылка откроется в новой вкладке.</p>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
     <div class="modal fade" id="practiceModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
