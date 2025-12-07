@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # URL для подключения к SQLite. Файл будет создан в корне проекта.
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./media/sql_app.db"
 
 # Создаем движок (engine) SQLite
 engine = create_engine(

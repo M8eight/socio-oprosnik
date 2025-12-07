@@ -1,6 +1,13 @@
 // ==================== АВТООПРЕДЕЛЕНИЕ API URL ====================
 // Используем текущий хост браузера вместо жёсткого 127.0.0.1
-const API_BASE_URL = `${window.location.protocol}//${window.location.hostname}:${window.location.port || 8080}`;
+const hostname = window.location.hostname;
+const port = window.location.port;
+
+// Проверяем, существует ли порт. Если да, добавляем двоеточие и порт.
+// Если нет (пустая строка на продакшене), добавляем пустую строку.
+const portSuffix = port ? `:${port}` : '';
+
+const API_BASE_URL = `${window.location.protocol}//${hostname}${portSuffix}`;
 
 console.log("🌐 API Base URL:", API_BASE_URL); // Для отладки
 
@@ -498,6 +505,18 @@ function showQuestion(index) {
     const overlayText = document.getElementById("overlay-text");
     const choicesContainer = document.getElementById("choicesContainer");
     const dialogueBox = document.querySelector(".vn-textbox");
+    const visualNovelElement = document.querySelector(".visual-novel");
+
+    // === ЛОГИКА СМЕНЫ ФОНА ===
+    if (question.background && visualNovelElement) {
+        // Устанавливаем новое фоновое изображение.
+        // Используем question.background как URL.
+        // Все остальные свойства background (center/cover no-repeat)
+        // остаются от CSS класса .visual-novel, если вы меняете 
+        // только background-image. 
+        // Чтобы сохранить все свойства, лучше менять именно background-image.
+        visualNovelElement.style.backgroundImage = `url('${question.background}')`;
+    }
 
     // === ЛОГИКА OVERLAY ===
     if (question.overlay) {
@@ -671,23 +690,23 @@ function showChoices() {
         container.appendChild(continueButton);
         return;
     }
-    
+
     // ЛОГИКА ДЛЯ ОБЫЧНЫХ/КАСТОМНЫХ КНОПОК (включая isEnd, если choices там есть)
     // Если choices есть, то используем их.
     if (question.choices && question.choices.length > 0) {
         question.choices.forEach((choice) => {
             const button = document.createElement("button");
             // Если шаг финальный (isEnd) и есть кастомная кнопка, она должна завершать игру.
-            button.className = question.isEnd ? "vn-continue-btn" : "vn-choice-btn"; 
+            button.className = question.isEnd ? "vn-continue-btn" : "vn-choice-btn";
             button.textContent = choice.text;
-            
+
             button.onclick = (e) => {
                 e.stopPropagation();
-                
+
                 if (question.isEnd) {
                     // Если это конечный шаг с кастомной кнопкой, она завершает этап
-                    handleStageFinish(); 
-                    return; 
+                    handleStageFinish();
+                    return;
                 }
 
                 if (question.type === "quiz") {

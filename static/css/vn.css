@@ -12,6 +12,8 @@
 
 .vn-textbox {
   background: rgba(0, 0, 0, 0.9);
+  /* !!! ПРЕФИКС ДЛЯ iOS SAFARI !!! */
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   padding: 30px 40px;
   margin: 0;
@@ -20,6 +22,8 @@
   border-top: 2px solid rgba(17, 141, 145, 0.5);
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
   min-height: 200px;
+  /* ПРЕФИКС ДЛЯ АНИМАЦИИ */
+  -webkit-animation: slide-up 0.5s ease-out;
   animation: slide-up 0.5s ease-out;
 }
 
@@ -46,6 +50,8 @@
 /* Индикатор печати */
 .vn-textbox.typing .vn-dialogue-text::after {
   content: "_";
+  /* ПРЕФИКС ДЛЯ АНИМАЦИИ */
+  -webkit-animation: text-blink 0.7s infinite;
   animation: text-blink 0.7s infinite;
   margin-left: 2px;
 }
@@ -63,18 +69,23 @@
 
 .vn-control-btn {
   background: rgba(0, 0, 0, 0.8);
+  /* !!! ПРЕФИКС ДЛЯ iOS SAFARI !!! */
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   color: white;
   border: 2px solid rgba(255, 255, 255, 0.3);
   padding: 12px 24px;
   border-radius: 50px;
   cursor: pointer;
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   font-weight: 600;
 }
 
 .vn-control-btn:hover {
   background: rgba(255, 255, 255, 0.2);
+  /* ПРЕФИКС ДЛЯ TRANSFORM */
+  -webkit-transform: scale(1.05);
   transform: scale(1.05);
 }
 
@@ -87,45 +98,65 @@
 }
 
 /* ==================== ПЕРСОНАЖИ ==================== */
+/* ==================== ПЕРСОНАЖИ ==================== */
 
 #charactersContainer {
-  position: absolute;
-  bottom: 150px;
-  width: 100%;
-  height: 70%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  pointer-events: none;
-  z-index: 10;
+    position: absolute;
+    bottom: 150px;
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: center; /* Центрирует по горизонтали */
+    align-items: flex-end;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden; 
 }
 
 .vn-character-sprite {
-  position: absolute;
-  bottom: 0;
-  z-index: 10;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: bottom center;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+    /* Убираем position: absolute, если персонаж центрируется через Flexbox контейнера.
+       НО, так как вы используете классы pos-dual-left/right, мы должны сохранить absolute.
+       Поэтому мы просто усиливаем центрирование и адаптивность: */
+    position: absolute; 
+    bottom: 0;
+    z-index: 10;
+    max-height: 100%; 
+    width: auto;       
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    -webkit-transition: opacity 0.5s ease, -webkit-transform 0.5s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    /* 🟢 ДОБАВЛЕНО: Подсказка для iOS для плавности и стабильности */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    will-change: transform, opacity;
 }
 
 /* Позиции персонажей */
+/* Убираем !important, чтобы избежать конфликтов и добавляем префиксы */
 .pos-single-center {
-  left: 50%;
-  transform: translateX(-50%) !important;
+    left: 50%;
+    /* ПРЕФИКС ДЛЯ TRANSFORM */
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
 }
 
 .pos-dual-left {
-  left: 30%;
-  transform: translateX(-50%) !important;
+    left: 30%;
+    /* ПРЕФИКС ДЛЯ TRANSFORM */
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
 }
 
 .pos-dual-right {
-  left: 70%;
-  transform: translateX(-50%) !important;
+    left: 70%;
+    /* ПРЕФИКС ДЛЯ TRANSFORM */
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
 }
-
 /* ==================== ВЫБОРЫ ==================== */
 
 #choicesContainer {
@@ -142,6 +173,8 @@
 
 .vn-choice-btn {
   background: rgba(17, 141, 145, 0.2);
+  /* !!! ПРЕФИКС ДЛЯ iOS SAFARI !!! */
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   color: white;
   border: 2px solid rgba(17, 141, 145, 0.5);
@@ -149,6 +182,7 @@
   font-size: 1.15rem;
   font-weight: 600;
   cursor: pointer;
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   text-align: center;
   border-radius: var(--border-radius-sm);
@@ -169,6 +203,7 @@
     rgba(255, 255, 255, 0.2),
     transparent
   );
+  -webkit-transition: left 0.5s ease;
   transition: left 0.5s ease;
 }
 
@@ -179,6 +214,8 @@
 .vn-choice-btn:hover {
   background: rgba(17, 141, 145, 0.4);
   border-color: rgba(121, 69, 133, 0.7);
+  /* ПРЕФИКС ДЛЯ TRANSFORM */
+  -webkit-transform: translateX(5px);
   transform: translateX(5px);
   box-shadow: 0 5px 20px rgba(17, 141, 145, 0.4);
 }
@@ -199,6 +236,8 @@
 
 .stage-list-item {
   background: rgba(255, 255, 255, 0.05);
+  /* !!! ПРЕФИКС ДЛЯ iOS SAFARI !!! */
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border: 2px solid rgba(17, 141, 145, 0.3);
   border-radius: var(--border-radius-sm);
@@ -206,6 +245,7 @@
   margin-bottom: 15px;
   position: relative;
   overflow: hidden;
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
 
@@ -222,6 +262,7 @@
     rgba(255, 255, 255, 0.1),
     transparent
   );
+  -webkit-transition: left 0.5s ease;
   transition: left 0.5s ease;
 }
 
@@ -230,6 +271,8 @@
 }
 
 .stage-list-item:hover {
+  /* ПРЕФИКС ДЛЯ TRANSFORM */
+  -webkit-transform: translateX(5px);
   transform: translateX(5px);
   border-color: rgba(17, 141, 145, 0.5);
   box-shadow: 0 5px 20px rgba(17, 141, 145, 0.3);

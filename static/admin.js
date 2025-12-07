@@ -1,4 +1,11 @@
-const API_BASE_URL = `${window.location.protocol}//${window.location.hostname}:${window.location.port || 8080}`; // Проверьте порт: в вашем коде был 8080, но FastAPI по умолчанию 8000. Я исправил на 8000.
+const hostname = window.location.hostname;
+const port = window.location.port;
+
+const portSuffix = port ? `:${port}` : '';
+
+const API_BASE_URL = `${window.location.protocol}//${hostname}${portSuffix}`;
+
+console.log("🌐 API Base URL:", API_BASE_URL); // Для отладки
 
 // Используемые эндпоинты
 const GET_STAGE_DETAIL_URL = (id) => `${API_BASE_URL}/stage/${id}`;

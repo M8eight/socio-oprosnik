@@ -3,7 +3,8 @@
 .navbar {
   background: rgba(0, 0, 0, 0.4) !important;
   backdrop-filter: blur(20px);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
   padding: 12px 0;
   border-bottom: 1px solid rgba(17, 141, 145, 0.3);
 }
@@ -42,6 +43,40 @@
   flex-shrink: 0;
 }
 
+/* ==================== НАВБАР ==================== */
+
+/* ... другие стили навбара */
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  /* Убираем flex-shrink: 0 для бренда, чтобы он мог уменьшиться, если необходимо */
+  /* flex-shrink: 0; */
+}
+
+.navbar-brand img {
+  height: 50px;
+  width: auto;
+  max-width: 180px; /* Было 180px */
+  transition: transform 0.3s ease;
+}
+
+/* Добавляем Media Query, чтобы ограничить логотип на очень маленьких экранах (iPhone 5/SE) */
+@media (max-width: 380px) {
+  .navbar-brand img {
+    /* Ограничиваем максимальную ширину логотипа, чтобы оставить место для бейджа */
+    max-width: 130px;
+    height: 40px; /* Немного уменьшаем высоту */
+  }
+  .user-badge {
+    /* Немного уменьшаем отступы бейджа */
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
 /* ==================== БЕЙДЖИ ПОЛЬЗОВАТЕЛЯ ==================== */
 
 .user-badge {
@@ -55,10 +90,9 @@
   transition: all 0.3s ease;
   cursor: pointer;
   animation: pulse-glow 3s infinite;
-  white-space: nowrap;
-  font-size: 0.95rem;
   font-weight: 600;
   box-shadow: var(--shadow-glow) !important;
+  min-width: 0;
 }
 
 .user-badge svg {
@@ -68,8 +102,11 @@
 }
 
 .user-badge span {
-  color: white;
-  font-weight: 600;
+    color: white;
+    font-weight: 600;
+    /* Если текст слишком длинный, он обрезается многоточием */
+    overflow: hidden;
+    text-overflow: ellipsis; 
 }
 
 .user-badge:hover {
@@ -134,7 +171,11 @@
 }
 
 .vn-continue-btn:hover {
-  background: linear-gradient(135deg, rgb(180, 200, 30), rgb(160, 180, 50)) !important;
+  background: linear-gradient(
+    135deg,
+    rgb(180, 200, 30),
+    rgb(160, 180, 50)
+  ) !important;
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(197, 217, 46, 0.6) !important;
 }
@@ -167,7 +208,12 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
   animation: shimmer 2s infinite;
 }
 

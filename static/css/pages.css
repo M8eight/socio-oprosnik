@@ -2,7 +2,7 @@
 
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 100dvh;
   padding-top: 100px;
   z-index: 1;
 }
@@ -23,6 +23,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-animation: slide-in 1s ease-out;
   animation: slide-in 1s ease-out;
   text-transform: uppercase;
   letter-spacing: 3px;

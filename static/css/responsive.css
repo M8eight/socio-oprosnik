@@ -87,6 +87,8 @@
 @media (max-width: 480px) {
   .user-badge span {
     max-width: 80px;
+    /* Убеждаемся, что span является блочным элементом, необходимым для max-width */
+    display: inline-block; 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -118,6 +120,7 @@
 
   .user-badge span {
     max-width: 60px;
+    /* Здесь эти свойства уже не нужны, так как они есть в 480px */
   }
 
   .navbar .d-flex {
