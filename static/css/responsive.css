@@ -1,0 +1,163 @@
+/* ==================== АДАПТИВНОСТЬ ==================== */
+
+/* Планшеты (768px - 991px) */
+@media (max-width: 991px) {
+  .navbar-brand img {
+    height: 45px;
+    max-width: 150px;
+  }
+
+  .user-badge {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+
+  .navbar .d-flex {
+    gap: 6px;
+  }
+}
+
+/* Мобильные устройства (до 768px) */
+@media (max-width: 768px) {
+  /* Hero секция */
+  .title-main {
+    font-size: 2.5rem;
+  }
+
+  .title-sub {
+    font-size: 1.5rem;
+  }
+
+  /* Карточки */
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Навбар */
+  .navbar {
+    padding: 10px 0;
+  }
+
+  .navbar .container-fluid {
+    padding: 0 10px;
+  }
+
+  .navbar-brand img {
+    height: 40px;
+    max-width: 130px;
+  }
+
+  .user-badge {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    gap: 6px;
+  }
+
+  .user-badge svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .navbar .d-flex {
+    gap: 5px;
+  }
+
+  /* Визуальная новелла */
+  .vn-textbox {
+    padding: 20px;
+    min-height: 180px;
+  }
+
+  .vn-dialogue-text {
+    font-size: 1.1rem;
+  }
+
+  #choicesContainer {
+    max-width: 95%;
+    gap: 10px;
+  }
+
+  .vn-choice-btn {
+    padding: 15px 20px;
+    font-size: 1rem;
+  }
+}
+
+/* Очень маленькие экраны (до 480px) */
+@media (max-width: 480px) {
+  .user-badge span {
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #overlay-text {
+    padding: 30px 25px;
+    font-size: 1.4rem;
+  }
+}
+
+/* Ультра-маленькие экраны (до 375px) */
+@media (max-width: 375px) {
+  .navbar-brand img {
+    height: 35px;
+    max-width: 110px;
+  }
+
+  .user-badge {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    gap: 5px;
+  }
+
+  .user-badge svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .user-badge span {
+    max-width: 60px;
+  }
+
+  .navbar .d-flex {
+    gap: 4px;
+  }
+
+  .title-main {
+    font-size: 2rem;
+  }
+
+  .title-sub {
+    font-size: 1.2rem;
+  }
+
+  #overlay-text {
+    padding: 25px 20px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Ориентация ландшафт для мобильных */
+@media (max-height: 600px) and (orientation: landscape) {
+  .vn-textbox {
+    min-height: 150px;
+    padding: 15px 30px;
+  }
+
+  .vn-dialogue-text {
+    font-size: 1rem;
+    min-height: 80px;
+  }
+
+  #charactersContainer {
+    bottom: 120px;
+    height: 60%;
+  }
+
+  #overlay-text {
+    padding: 20px 30px;
+    font-size: 1.3rem;
+    max-width: 600px;
+  }
+}

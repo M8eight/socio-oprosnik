@@ -1696,7 +1696,7 @@ body.modal-open {
 #overlay-text {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(30px);
-  border: 2px solid rgba(17, 141, 145, 0.5);
+  /* border: 2px solid rgba(17, 141, 145, 0.5); */
   border-radius: 25px;
   padding: 40px 50px;
   max-width: 800px;
@@ -1712,6 +1712,7 @@ body.modal-open {
   position: relative;
   pointer-events: auto; /* Панель кликабельна */
   z-index: 1600; /* Выше фона оверлея */
+  overflow-x: hidden;
 }
 
 @keyframes slideDown {

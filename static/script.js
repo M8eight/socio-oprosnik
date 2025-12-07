@@ -87,23 +87,29 @@ async function fetchUserProgress() {
 }
 
 async function submitScore(score, stage) {
-    const username = localStorage.getItem("userName");
-    if (!username) {
+    const fullName = localStorage.getItem("userName");
+    if (!fullName) {
         console.error("Имя пользователя не найдено. Невозможно отправить счет.");
         return;
     }
 
-    console.log(`📊 submitScore вызван: username=${username}, score=${score}, stage=${stage}`);
+    console.log(`📊 submitScore вызван:`);
+    console.log(`   - Полное имя (username): "${fullName}"`);
+    console.log(`   - score: ${score}, stage: ${stage}`);
 
     try {
+        const payload = {
+            username: fullName, // Отправляем полное имя "Имя Фамилия"
+            score: score,
+            stage: stage,
+        };
+
+        console.log("📤 Отправляем payload:", JSON.stringify(payload, null, 2));
+
         const response = await fetch(SUBMIT_SCORE_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username: username,
-                score: score,
-                stage: stage,
-            }),
+            body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
@@ -481,7 +487,7 @@ async function startPractice(stageNum) {
 function showQuestion(index) {
     currentQuestionIndex = index;
     const question = currentStageQuestions[index];
-    
+
     if (!question) {
         console.error(`❌ Вопрос с индексом ${index} не найден!`);
         return;
@@ -491,7 +497,7 @@ function showQuestion(index) {
     const overlayPanel = document.getElementById("game-overlay-panel");
     const overlayText = document.getElementById("overlay-text");
     const choicesContainer = document.getElementById("choicesContainer");
-    const dialogueBox = document.querySelector(".vn-textbox"); 
+    const dialogueBox = document.querySelector(".vn-textbox");
 
     // === ЛОГИКА OVERLAY ===
     if (question.overlay) {
@@ -499,7 +505,7 @@ function showQuestion(index) {
         if (overlayBg) overlayBg.style.display = "block";
         if (overlayPanel) overlayPanel.style.display = "block";
         if (overlayText) overlayText.textContent = question.overlay;
-        
+
         // Переводим кнопки в режим "поверх"
         if (choicesContainer) {
             choicesContainer.classList.add("overlay-active-choices");
@@ -515,7 +521,7 @@ function showQuestion(index) {
         // Выключаем оверлей
         if (overlayBg) overlayBg.style.display = "none";
         if (overlayPanel) overlayPanel.style.display = "none";
-        
+
         // Возвращаем кнопки в обычное состояние
         if (choicesContainer) {
             choicesContainer.classList.remove("overlay-active-choices");
@@ -535,7 +541,7 @@ function showQuestion(index) {
     // Очищаем и скрываем кнопки перед генерацией новых
     if (choicesContainer) {
         choicesContainer.innerHTML = "";
-        choicesContainer.style.display = "none"; 
+        choicesContainer.style.display = "none";
     }
 
     const visibleChars = question.visibleCharacters || (question.character ? [question.character] : []);
@@ -558,7 +564,7 @@ function showQuestion(index) {
 
     const dialogueText = document.getElementById("dialogueText");
     const textSpeed = question.speed || 30;
-    
+
     // Если есть текст — печатаем. Если нет — сразу кнопки.
     if (question.text && dialogueText) {
         typeText(question.text, dialogueText, () => {
@@ -631,56 +637,25 @@ function showChoices() {
     }
 
     const container = document.getElementById("choicesContainer");
-    if (!container) {
-        console.error("❌ Контейнер choicesContainer не найден!");
-        return;
-    }
+    if (!container) return;
 
     container.innerHTML = "";
     container.style.display = "flex";
 
-    if (question.isEnd) {
-        // ИСПРАВЛЕНИЕ: Показываем кнопку завершения этапа
+    // ПРОВЕРКА ЗАВЕРШЕНИЯ:
+    // Если шаг isEnd, но нет кнопок (choices) в JSON, создаем стандартную кнопку завершения.
+    if (question.isEnd && (!question.choices || question.choices.length === 0)) {
+        console.log("ℹ️ Шаг isEnd без кастомных кнопок. Создаем кнопку завершения.");
         const endButton = document.createElement("button");
         endButton.className = "vn-continue-btn";
         endButton.textContent = "Завершить этап";
-        endButton.onclick = async () => {
-            
-            let stageToSubmit = globalUserStage;
-            let scoreChange = 0;
-            const stageRewardTaken = isStageRewardTaken(currentStageIndex);
-
-            // 🌟 ИСПРАВЛЕНИЕ: ЛОГИКА НАЧИСЛЕНИЯ БОНУСА ЗА ЭТАП 🌟
-            // Начисляем бонус, если это новый этап и бонус за него еще не был взят
-            if (currentStageIndex > globalUserStage && !stageRewardTaken) {
-                scoreChange = STAGE_REWARD;
-                globalUserScore += scoreChange;
-                stageToSubmit = currentStageIndex; // Обновляем прогресс этапов
-                markStageRewardTaken(currentStageIndex);
-                console.log(`🎉 Этап ${currentStageIndex} завершён! Начислено +${STAGE_REWARD} очков.`);
-            } else if (currentStageIndex > globalUserStage) {
-                // Если этап пройден, но награда уже взята, просто обновим globalUserStage
-                stageToSubmit = currentStageIndex;
-            }
-
-            // Обновляем прогресс перед возвратом
-            await submitScore(globalUserScore, stageToSubmit);
-
-            // Скрываем VN-интерфейс
-            document.getElementById("page2").classList.remove("active");
-
-            const IS_LAST_STAGE = currentStageIndex === MAX_TOTAL_STAGE; 
-            if (IS_LAST_STAGE && stageToSubmit === currentStageIndex) {
-                 showPrizeModal(PRIZE_LINK_URL);
-            }
-
-            backToMenu();
-        };
+        endButton.onclick = handleStageFinish; // ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
         container.appendChild(endButton);
-        return;
+        return; // Выход, если это финальный шаг без кастомных choices
     }
 
-    if (!question.choices || question.choices.length === 0) {
+    // ЛОГИКА ДЛЯ АВТОПРОДОЛЖЕНИЯ (если нет choices, но и не isEnd)
+    if (!question.isEnd && (!question.choices || question.choices.length === 0)) {
         console.warn("⚠️ У вопроса нет choices! Добавляем кнопку продолжения.");
         const continueButton = document.createElement("button");
         continueButton.className = "vn-continue-btn";
@@ -696,30 +671,91 @@ function showChoices() {
         container.appendChild(continueButton);
         return;
     }
-
-    question.choices.forEach((choice) => {
-        const button = document.createElement("button");
-        button.className = "vn-choice-btn";
-        button.textContent = choice.text;
-        button.onclick = (e) => {
-            e.stopPropagation();
-            if (question.type === "quiz") {
-                handleQuizAnswer(choice, question);
-            } else {
-                const nextIndex = choice.next;
-                if (nextIndex >= 0 && nextIndex < currentStageQuestions.length) {
-                    showQuestion(nextIndex);
-                } else {
-                    console.error(`❌ Индекс next (${nextIndex}) выходит за границы массива вопросов!`);
-                    backToMenu();
+    
+    // ЛОГИКА ДЛЯ ОБЫЧНЫХ/КАСТОМНЫХ КНОПОК (включая isEnd, если choices там есть)
+    // Если choices есть, то используем их.
+    if (question.choices && question.choices.length > 0) {
+        question.choices.forEach((choice) => {
+            const button = document.createElement("button");
+            // Если шаг финальный (isEnd) и есть кастомная кнопка, она должна завершать игру.
+            button.className = question.isEnd ? "vn-continue-btn" : "vn-choice-btn"; 
+            button.textContent = choice.text;
+            
+            button.onclick = (e) => {
+                e.stopPropagation();
+                
+                if (question.isEnd) {
+                    // Если это конечный шаг с кастомной кнопкой, она завершает этап
+                    handleStageFinish(); 
+                    return; 
                 }
-            }
-        };
-        container.appendChild(button);
-    });
+
+                if (question.type === "quiz") {
+                    handleQuizAnswer(choice, question);
+                } else {
+                    const nextIndex = choice.next;
+                    if (nextIndex >= 0 && nextIndex < currentStageQuestions.length) {
+                        showQuestion(nextIndex);
+                    } else {
+                        console.error(`❌ Индекс next (${nextIndex}) выходит за границы массива вопросов!`);
+                        backToMenu();
+                    }
+                }
+            };
+            container.appendChild(button);
+        });
+    }
 }
 
+async function handleStageFinish() {
+    let stageToSubmit = globalUserStage;
+    let scoreChange = 0;
+    const stageRewardTaken = isStageRewardTaken(currentStageIndex);
+
+    // 🌟 ЛОГИКА НАЧИСЛЕНИЯ БОНУСА ЗА ЭТАП
+    if (currentStageIndex > globalUserStage && !stageRewardTaken) {
+        scoreChange = STAGE_REWARD;
+        globalUserScore += scoreChange;
+        stageToSubmit = currentStageIndex;
+        markStageRewardTaken(currentStageIndex);
+        console.log(`🎉 Этап ${currentStageIndex} завершён ВПЕРВЫЕ! Начислено +${STAGE_REWARD} очков.`);
+    } else if (currentStageIndex > globalUserStage) {
+        stageToSubmit = currentStageIndex;
+    }
+
+    // Обновляем прогресс перед возвратом
+    await submitScore(globalUserScore, stageToSubmit);
+
+    // Скрываем VN-интерфейс
+    document.getElementById("page2").classList.remove("active");
+
+    const IS_LAST_STAGE = currentStageIndex === MAX_TOTAL_STAGE;
+    if (IS_LAST_STAGE && stageToSubmit === currentStageIndex) {
+        showPrizeModal(PRIZE_LINK_URL); // Убедись, что эта функция существует
+    }
+
+    backToMenu();
+}
+
+function resetAllRewards() {
+    localStorage.removeItem("rewardedStages");
+    localStorage.removeItem("rewardedAnswers");
+    console.log("🔄 Все награды сброшены!");
+}
 // ============== ОБРАБОТКА ОТВЕТА НА КВИЗ ================
+
+function isAnswerRewardTaken(stageIndex, questionIndex) {
+    const key = `answer_${stageIndex}_${questionIndex}`;
+    const taken = JSON.parse(localStorage.getItem("rewardedAnswers") || "{}");
+    return taken[key] === true;
+}
+
+function markAnswerRewardTaken(stageIndex, questionIndex) {
+    const key = `answer_${stageIndex}_${questionIndex}`;
+    const taken = JSON.parse(localStorage.getItem("rewardedAnswers") || "{}");
+    taken[key] = true;
+    localStorage.setItem("rewardedAnswers", JSON.stringify(taken));
+}
 
 async function handleQuizAnswer(choice, question) {
     const container = document.getElementById("choicesContainer");
@@ -731,43 +767,48 @@ async function handleQuizAnswer(choice, question) {
     const nextStepIndex = choice.next;
     let stageToSubmit = globalUserStage;
 
-    // 🌟 ИСПРАВЛЕНИЕ: УБРАНА ЛОГИКА STAGE_REWARD. Теперь она в showChoices.
-    
-    // ✅ ЕСЛИ ЭТО КВИЗ И ОТВЕТ ПРАВИЛЬНЫЙ → +50
+    // Проверяем, получал ли игрок награду за этот вопрос
+    const answerRewardTaken = isAnswerRewardTaken(currentStageIndex, currentQuestionIndex);
+
+    // ✅ ЕСЛИ ЭТО КВИЗ И ОТВЕТ ПРАВИЛЬНЫЙ
     if (choice.isCorrect === true) {
-        scoreChange += ANSWER_REWARD;
-        responseText = "🎉 " + (question.correctResponse || "Правильно!");
+        if (!answerRewardTaken) {
+            scoreChange += ANSWER_REWARD;
+            markAnswerRewardTaken(currentStageIndex, currentQuestionIndex);
+            console.log(`✅ Правильный ответ! Начислено +${ANSWER_REWARD} очков.`);
+            responseText = "🎉 " + (question.correctResponse || "Правильно! +50 очков!");
+        } else {
+            console.log(`ℹ️ Правильный ответ, но награда уже получена ранее.`);
+            responseText = "✅ " + (question.correctResponse || "Правильно! (награда уже получена)");
+        }
     } else if (choice.isCorrect === false) {
-         responseText = "❌ " + (question.wrongResponse || "Неправильно!");
+        responseText = "❌ " + (question.wrongResponse || "Неправильно!");
+        console.log(`❌ Неправильный ответ. Очки не начислены.`);
     }
 
     const newScore = globalUserScore + scoreChange;
 
-    // ✅ сразу обновляем локально
+    // ✅ сразу обновляем локально и отправляем на сервер
     globalUserScore = newScore;
-
-    // ✅ отправляем на сервер
     await submitScore(newScore, stageToSubmit);
 
+    // Печатаем реакцию на ответ
     typeText(responseText || "Продолжаем...", document.getElementById("dialogueText"), () => {
         const nextButton = document.createElement("button");
         nextButton.className = "vn-continue-btn";
         nextButton.textContent = "Далее ▸";
 
+        // ================= ИСПРАВЛЕНИЕ ЗДЕСЬ =================
         nextButton.onclick = () => {
             if (nextStepIndex >= 0 && nextStepIndex < currentStageQuestions.length) {
-                const nextQuestion = currentStageQuestions[nextStepIndex];
-
-                if (nextQuestion && nextQuestion.isEnd) {
-                    // Если следующий шаг — это конец, не переходим к нему, а показываем финальную кнопку
-                    showChoices(); 
-                } else {
-                    showQuestion(nextStepIndex);
-                }
+                // Мы ВСЕГДА вызываем showQuestion, даже если это конец.
+                // showQuestion обновит индекс, покажет текст финала и вызовет showChoices.
+                showQuestion(nextStepIndex);
             } else {
                 backToMenu();
             }
         };
+        // =====================================================
 
         container.style.display = "flex";
         container.appendChild(nextButton);
@@ -791,25 +832,25 @@ function openChest() {
     const container = document.getElementById('chest-animation-container'); // Используем контейнер
 
     if (chestImage && container) {
-        
+
         // 1. Запускаем анимацию частиц на контейнере
         container.classList.add('is-opening');
-        
+
         // 2. Убираем анимацию покачивания и запускаем анимацию "открытия" (выпрыгивание) на спрайте
         chestImage.classList.remove('chest-initial-animation');
         chestImage.classList.add('chest-open-bounce');
-        
+
         // 3. Смена спрайта и показ ссылки через небольшой таймаут (0.5 секунды)
         setTimeout(() => {
             chestImage.src = 'static/chest2.png'; // Меняем спрайт на открытый
-            
+
             // Удаляем классы открытия и добавляем финальный вид
-            chestImage.classList.remove('chest-open-bounce'); 
-            chestImage.classList.add('chest-final-open'); 
+            chestImage.classList.remove('chest-open-bounce');
+            chestImage.classList.add('chest-final-open');
 
             // Удаляем класс частиц, чтобы анимация не повторялась
-            container.classList.remove('is-opening'); 
-        
+            container.classList.remove('is-opening');
+
             if (prizeLink) {
                 prizeLink.style.display = 'inline-block'; // Показываем кнопку-ссылку
             }
@@ -839,12 +880,12 @@ function showPrizeModal(link) {
         chestImage.src = 'static/chest.png'; // Убеждаемся, что спрайт закрыт
         chestImage.classList.add('chest-initial-animation'); // Запускаем покачивание
         // Убеждаемся, что все классы открытия удалены
-        chestImage.classList.remove('chest-open-bounce', 'chest-final-open'); 
+        chestImage.classList.remove('chest-open-bounce', 'chest-final-open');
     }
-    
+
     if (container) {
-         container.classList.remove('is-opening'); // Сбрасываем частицы
-         container.style.cursor = 'pointer'; // Устанавливаем курсор для клика
+        container.classList.remove('is-opening'); // Сбрасываем частицы
+        container.style.cursor = 'pointer'; // Устанавливаем курсор для клика
     }
 
 
@@ -876,6 +917,7 @@ function backToMenu() {
 document.addEventListener("DOMContentLoaded", () => {
     const nameModalElement = document.getElementById("nameModal");
     const usernameInput = document.getElementById("username-input");
+    const surnameInput = document.getElementById("surname-input");
     const saveNameButton = document.getElementById("save-name-button");
 
     let nameModalBootstrap = null;
@@ -887,32 +929,70 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const handleSaveName = async () => {
-        if (!usernameInput) return;
-        const newName = usernameInput.value.trim();
-        if (newName) {
-            localStorage.setItem("userName", newName);
-            globalUserName = newName;
-            const nicknameDisplay = document.getElementById("nickname-display");
-            if (nicknameDisplay) nicknameDisplay.textContent = newName;
-            if (nameModalBootstrap) nameModalBootstrap.hide();
+        if (!usernameInput || !surnameInput) return;
 
-            // Отправляем начальный прогресс
+        const newName = usernameInput.value.trim();
+        const newSurname = surnameInput.value.trim();
+
+        if (newName && newSurname) {
+            // Объединяем имя и фамилию в одну строку
+            const fullName = newName + " " + newSurname;
+
+            // ВАЖНО: Сначала сохраняем в localStorage
+            localStorage.setItem("userName", fullName);
+            globalUserName = fullName;
+
+            // Обновляем отображение
+            const nicknameDisplay = document.getElementById("nickname-display");
+            if (nicknameDisplay) nicknameDisplay.textContent = fullName;
+
+            // Логируем для отладки
+            console.log("💾 Сохранено в localStorage:", fullName);
+            console.log("📤 Отправляем на сервер...");
+
+            // Используем небольшую задержку, чтобы гарантировать сохранение
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // Отправляем начальный прогресс с полным именем
             await submitScore(0, 0);
+
+            // Закрываем модалку только ПОСЛЕ успешной отправки
+            if (nameModalBootstrap) nameModalBootstrap.hide();
         } else {
-            alert("Пожалуйста, введите имя!");
+            alert("Пожалуйста, введите имя и фамилию!");
         }
     };
 
+    // Проверяем, есть ли сохраненное полное имя
     const storedName = localStorage.getItem("userName");
 
     if (!storedName) {
+        // Показываем модалку, если нет имени
         if (nameModalBootstrap) nameModalBootstrap.show();
+    } else {
+        // Используем сохраненное полное имя
+        globalUserName = storedName;
+        const nicknameDisplay = document.getElementById("nickname-display");
+        if (nicknameDisplay) nicknameDisplay.textContent = globalUserName;
     }
 
     if (saveNameButton) saveNameButton.addEventListener("click", handleSaveName);
 
+    // Обработка Enter для обоих полей
     if (usernameInput) {
         usernameInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                // Переходим к полю фамилии
+                if (surnameInput) {
+                    surnameInput.focus();
+                }
+            }
+        });
+    }
+
+    if (surnameInput) {
+        surnameInput.addEventListener("keypress", (e) => {
             if (e.key === "Enter") {
                 e.preventDefault();
                 handleSaveName();

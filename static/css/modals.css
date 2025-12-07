@@ -1,0 +1,237 @@
+/* ==================== МОДАЛЬНЫЕ ОКНА ==================== */
+
+.modal-content {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(40px);
+  border: 2px solid rgba(17, 141, 145, 0.3);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.modal-content::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  animation: liquid-shine 3s infinite;
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.modal-title {
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.btn-close {
+  filter: invert(1);
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.btn-close:hover {
+  opacity: 1;
+  transform: rotate(90deg);
+}
+
+/* ==================== ТАБЛИЦА ЛИДЕРОВ ==================== */
+
+.leaderboard-container,
+.liquid-leaderboard {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(40px);
+  border: 2px solid rgba(17, 141, 145, 0.4);
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.leaderboard-container {
+  padding: 0;
+  border-radius: 20px;
+  border: 1px solid rgba(17, 141, 145, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.leaderboard-wrapper {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 141, 145, 0.4);
+  box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Стили таблицы */
+.table,
+.leaderboard-table {
+  color: white;
+  background: transparent;
+  margin-bottom: 0;
+}
+
+.table thead,
+.leaderboard-table thead {
+  background: linear-gradient(135deg, rgba(17, 141, 145, 0.6), rgba(121, 69, 133, 0.6));
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.table thead th,
+.leaderboard-table th {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 0.95rem;
+  padding: 20px 15px;
+  border: none;
+  color: rgb(197, 217, 46);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.leaderboard-table th {
+  padding: 18px 20px;
+  color: #e0e7ff;
+}
+
+/* Строки таблицы */
+.table tbody tr,
+.leaderboard-table tbody tr {
+  background: rgba(255, 255, 255, 0.02);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table tbody tr::before,
+.leaderboard-table tbody tr::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.6s ease;
+  z-index: 2;
+}
+
+.table tbody tr:hover,
+.leaderboard-table tbody tr:hover {
+  background: rgba(17, 141, 145, 0.15);
+  transform: none;
+  box-shadow: none;
+}
+
+.leaderboard-table tbody tr:hover::before {
+  left: 100%;
+}
+
+.table tbody td,
+.leaderboard-table td {
+  background-color: transparent;
+  color: white;
+  padding: 15px;
+  border: none;
+  font-weight: 500;
+  font-size: 1rem;
+  position: relative;
+  z-index: 3;
+  border-top: none;
+  vertical-align: middle;
+}
+
+.leaderboard-table td {
+  padding: 18px 20px;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+/* Выделение текущего игрока */
+.leaderboard-row.table-primary {
+  background: linear-gradient(135deg, rgba(17, 141, 145, 0.4), rgba(121, 69, 133, 0.3)) !important;
+  border-left: 5px solid var(--color-primary) !important;
+  box-shadow: 0 0 30px rgba(17, 141, 145, 0.6) !important;
+  font-weight: 700;
+}
+
+.leaderboard-row.table-primary strong {
+  color: #fff;
+  text-shadow: 0 0 5px var(--color-primary);
+}
+
+/* Топ-3 места */
+.table-warning {
+  background: rgba(197, 217, 46, 0.1) !important;
+  border-left: 5px solid var(--color-accent-2);
+  border-color: rgba(197, 217, 46, 0.5) !important;
+}
+
+.leaderboard-table .table-warning {
+  background: rgba(197, 217, 46, 0.15) !important;
+}
+
+.table-secondary {
+  background: rgba(121, 69, 133, 0.1) !important;
+  border-left: 5px solid var(--color-accent-1);
+  border-color: rgba(121, 69, 133, 0.5) !important;
+}
+
+.leaderboard-table .table-secondary {
+  background: rgba(121, 69, 133, 0.15) !important;
+}
+
+.table-danger {
+  background: rgba(17, 141, 145, 0.1) !important;
+  border-left: 5px solid var(--color-primary);
+  border-color: rgba(17, 141, 145, 0.5) !important;
+}
+
+.leaderboard-table .table-danger {
+  background: rgba(17, 141, 145, 0.15) !important;
+}
+
+/* Медали и счет */
+.rank-medal {
+  font-size: 1.5rem;
+  display: inline-block;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+}
+
+.player-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.player-score {
+  font-weight: 800;
+  color: #fcd34d;
+  font-size: 1.2rem;
+  text-shadow: 0 0 15px rgba(252, 211, 77, 0.7);
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

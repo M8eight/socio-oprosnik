@@ -1,0 +1,189 @@
+/* ==================== НАВБАР ==================== */
+
+.navbar {
+  background: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(17, 141, 145, 0.3);
+}
+
+.navbar .container-fluid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  padding: 0 15px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.navbar-brand img {
+  height: 50px;
+  width: auto;
+  max-width: 180px;
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand img:hover {
+  transform: scale(1.05);
+}
+
+.navbar .d-flex {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ==================== БЕЙДЖИ ПОЛЬЗОВАТЕЛЯ ==================== */
+
+.user-badge {
+  background: var(--gradient-primary) !important;
+  border: 2px solid var(--primary-glow) !important;
+  border-radius: 50px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  animation: pulse-glow 3s infinite;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-glow) !important;
+}
+
+.user-badge svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.user-badge span {
+  color: white;
+  font-weight: 600;
+}
+
+.user-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(17, 141, 145, 0.6) !important;
+}
+
+/* ==================== КНОПКИ ==================== */
+
+.card-btn,
+.vn-choice-btn,
+.vn-continue-btn,
+.stage-list-item .btn,
+#save-name-button,
+#feedback-button {
+  background: var(--gradient-primary) !important;
+  border: 2px solid var(--primary-glow) !important;
+  box-shadow: var(--shadow-glow) !important;
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.card-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.card-btn:hover,
+.stage-list-item .btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 40px rgba(17, 141, 145, 0.7) !important;
+}
+
+/* Кнопка "Далее" для визуальной новеллы */
+.vn-continue-btn {
+  width: 100%;
+  padding: 18px;
+  background: var(--gradient-accent-2) !important;
+  box-shadow: 0 5px 20px rgba(197, 217, 46, 0.4) !important;
+}
+
+.vn-continue-btn:hover {
+  background: linear-gradient(135deg, rgb(180, 200, 30), rgb(160, 180, 50)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(197, 217, 46, 0.6) !important;
+}
+
+/* ==================== ПРОГРЕСС-БАРЫ ==================== */
+
+.progress-bar-custom {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-primary) !important;
+  width: 0%;
+  transition: width 1s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* ==================== ИКОНКИ КАРТОЧЕК ==================== */
+
+.card-icon-blue {
+  background: var(--gradient-primary);
+  box-shadow: 0 10px 30px rgba(17, 141, 145, 0.5);
+}
+
+.card-icon-green {
+  background: var(--gradient-accent-2);
+  box-shadow: 0 10px 30px rgba(197, 217, 46, 0.5);
+}
+
+.card-icon-purple {
+  background: var(--gradient-accent-1);
+  box-shadow: 0 10px 30px rgba(121, 69, 133, 0.5);
+}

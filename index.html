@@ -14,7 +14,15 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Playfair+Display:wght@700;900&amp;display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="static/styles.css" />
+    <!-- <link rel="stylesheet" href="static/styles.css" /> -->
+    <link rel="stylesheet" href="static/css/anim-overlay.css" />
+    <link rel="stylesheet" href="static/css/components.css" />
+    <link rel="stylesheet" href="static/css/modals.css" />
+    <link rel="stylesheet" href="static/css/pages.css" />
+    <link rel="stylesheet" href="static/css/responsive.css" />
+    <link rel="stylesheet" href="static/css/variables.css" />
+    <link rel="stylesheet" href="static/css/vn.css" />
+
     <style>
       body.modal-open {
         padding-right: 0 !important;
@@ -317,7 +325,7 @@
           <div
             class="user-badge"
             data-bs-toggle="modal"
-            data-bs-target="#nameModal"
+            data-bs-target="#leaderboardModal"
             role="button"
             aria-label="Изменить имя"
           >
@@ -416,7 +424,7 @@
     <div class="page" id="page2">
       <section class="visual-novel">
         <div id="game-overlay-bg"></div>
-        <div id="game-overlay-panel">
+        <div id="game-overlay-panel" class="mb-4">
           <div id="overlay-text"></div>
         </div>
 
@@ -482,7 +490,8 @@
           <div class="modal-body">
             <div class="liquid-glass-card mb-3">
               <p style="color: rgba(255, 255, 255, 0.9); margin: 0">
-                Введите ваше имя, чтобы начать путешествие в мир социологии!
+                Введите ваше имя и фамилию, чтобы начать путешествие в мир
+                социологии!
               </p>
             </div>
             <input
@@ -490,6 +499,13 @@
               class="form-control"
               id="username-input"
               placeholder="Ваше имя"
+              maxlength="20"
+            />
+            <input
+              type="text"
+              class="form-control mt-3"
+              id="surname-input"
+              placeholder="Ваша фамилия"
               maxlength="20"
             />
           </div>
