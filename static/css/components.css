@@ -2,11 +2,18 @@
 
 .navbar {
   background: rgba(0, 0, 0, 0.4) !important;
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3),
     inset 0 -1px 0 rgba(255, 255, 255, 0.1);
   padding: 12px 0;
   border-bottom: 1px solid rgba(17, 141, 145, 0.3);
+  position: sticky; /* Изменено с fixed для предотвращения скачков */
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 9999;
 }
 
 .navbar .container-fluid {
@@ -15,6 +22,7 @@
   justify-content: space-between;
   flex-wrap: nowrap;
   padding: 0 15px;
+  max-width: 100%;
 }
 
 .navbar-brand {
@@ -22,17 +30,22 @@
   align-items: center;
   padding: 0;
   margin: 0;
-  flex-shrink: 0;
+  flex-shrink: 1; /* Позволяем логотипу уменьшаться */
+  min-width: 0; /* Для правильного сжатия */
 }
 
 .navbar-brand img {
   height: 50px;
   width: auto;
   max-width: 180px;
+  -webkit-transition: transform 0.3s ease;
   transition: transform 0.3s ease;
+  display: block;
 }
 
-.navbar-brand img:hover {
+.navbar-brand img:hover,
+.navbar-brand img:active {
+  -webkit-transform: scale(1.05);
   transform: scale(1.05);
 }
 
@@ -102,11 +115,11 @@
 }
 
 .user-badge span {
-    color: white;
-    font-weight: 600;
-    /* Если текст слишком длинный, он обрезается многоточием */
-    overflow: hidden;
-    text-overflow: ellipsis; 
+  color: white;
+  font-weight: 600;
+  /* Если текст слишком длинный, он обрезается многоточием */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-badge:hover {
