@@ -3,7 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
     <title>Социологический проект</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -23,7 +30,6 @@
     <link rel="stylesheet" href="static/css/responsive.css" />
     <link rel="stylesheet" href="static/css/variables.css" />
     <link rel="stylesheet" href="static/css/vn.css" />
-
 
     <style>
       body.modal-open {
@@ -425,11 +431,13 @@
 
     <div class="page" id="page2">
       <section class="visual-novel">
+        <!-- Оверлеи для вопросов -->
         <div id="game-overlay-bg"></div>
-        <div id="game-overlay-panel" class="mb-4">
+        <div id="game-overlay-panel" class="mb-auto mt-auto">
           <div id="overlay-text"></div>
         </div>
 
+        <!-- УПРАВЛЕНИЕ (кнопки сверху справа) -->
         <div class="vn-controls">
           <button class="vn-control-btn" onclick="skipText()">
             Пропустить ▸▸
@@ -439,36 +447,36 @@
           </button>
         </div>
 
+        <!-- ⭐ NAMEPLATE (ВЫНЕСЕН ИЗ ТЕКСТБОКСА - ТЕПЕРЬ ВСЕГДА ВИДЕН) -->
+        <div class="vn-nameplate" id="characterName">Профессор Социо</div>
+
+        <!-- ПЕРСОНАЖИ (без инлайн-стилей размеров) -->
         <div id="charactersContainer">
+          <!-- Персонаж 1 - добавлен класс idle-animation для анимации -->
           <div
             id="char_0"
-            class="vn-character-sprite pos-single-center"
-            style="
-              width: 400px;
-              height: 600px;
-              background-image: url('./media/professor1.png');
-              opacity: 1;
-            "
+            class="vn-character-sprite pos-single-center idle-animation"
+            style="background-image: url('./media/professor1.png'); opacity: 1"
           ></div>
-          <!-- <div
+
+          <!-- Персонаж 2 (скрыт по умолчанию) -->
+          <div
             id="char_1"
             class="vn-character-sprite"
-            style="
-              width: 350px;
-              height: 550px;
-              background-image: url('/media/conte_2.png');
-              opacity: 0;
-            "
-          ></div> -->
+            style="background-image: url('./media/conte_2.png'); opacity: 0"
+          ></div>
         </div>
 
+        <!-- ТЕКСТБОКС (БЕЗ nameplate внутри) -->
         <div class="vn-textbox">
-          <div class="vn-nameplate" id="characterName">Профессор Социо</div>
+          <!-- Текст диалога -->
           <div class="vn-dialogue-text" id="dialogueText">
-            Добро qqwqwqf пожаловать в первый этап: Введение в социологию! Мы
-            разберем основные понятия.
+            Добро пожаловать в первый этап: Введение в социологию! Мы разберем
+            основные понятия.
           </div>
-          <div id="choicesContainer" style="display: flex"></div>
+
+          <!-- Контейнер для выборов -->
+          <div id="choicesContainer" style="display: none"></div>
         </div>
       </section>
     </div>
@@ -535,7 +543,7 @@
       id="leaderboardModal"
       tabindex="-1"
       aria-hidden="true"
-      style="display: none"
+      style="display: none; margin-top: 4.5em"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -653,7 +661,6 @@
                 class="chest-initial-animation"
               />
             </div>
-
             <a
               id="prizeLink"
               href="#"
@@ -695,7 +702,9 @@
             </div>
             <div class="stage-container" id="practice-stages-container">
               <div class="stage-list-item disabled-stage border-primary">
-                <h6>🔒 Этап 1: Социология труда</h6>
+                <h6>
+                  🔒 Этап 1: Падение мотивации сотрудников на производстве
+                </h6>
                 <p
                   class="stage-placeholder mb-2"
                   style="color: rgba(255, 255, 255, 0.5)"
@@ -704,7 +713,7 @@
                 </p>
               </div>
               <div class="stage-list-item disabled-stage border-primary">
-                <h6>🔒 Этап 2: Производство и общество</h6>
+                <h6>🔒 Этап 2: Разногласия в школьной администрации</h6>
                 <p
                   class="stage-placeholder mb-2"
                   style="color: rgba(255, 255, 255, 0.5)"
@@ -713,7 +722,9 @@
                 </p>
               </div>
               <div class="stage-list-item disabled-stage border-primary">
-                <h6>🔒 Этап 3: Социальные движения</h6>
+                <h6>
+                  🔒 Этап 3: Смена организационной культуры в торговой сети
+                </h6>
                 <p
                   class="stage-placeholder mb-2"
                   style="color: rgba(255, 255, 255, 0.5)"
@@ -722,7 +733,9 @@
                 </p>
               </div>
               <div class="stage-list-item disabled-stage border-primary">
-                <h6>🔒 Этап 4: Урбанизация</h6>
+                <h6>
+                  🔒 Этап 4: Неравномерная нагрузка в больничном отделении
+                </h6>
                 <p
                   class="stage-placeholder mb-2"
                   style="color: rgba(255, 255, 255, 0.5)"
@@ -731,7 +744,7 @@
                 </p>
               </div>
               <div class="stage-list-item disabled-stage border-primary">
-                <h6>🔒 Этап 5: Социология организаций</h6>
+                <h6>🔒 Этап 5: Текучесть кадров в сфере общепита</h6>
                 <p
                   class="stage-placeholder mb-2"
                   style="color: rgba(255, 255, 255, 0.5)"
@@ -864,6 +877,29 @@
       document.querySelectorAll(".game-card").forEach((card) => {
         observer.observe(card);
       });
+
+      const feedbackUrl = "https://forms.gle/ddFb2C6ja2BCkTBJ6";
+
+      // Получаем элемент кнопки
+      const feedbackButton = document.getElementById("feedback-button");
+
+      if (feedbackButton) {
+        // Добавляем обработчик события клика
+        feedbackButton.addEventListener("click", function () {
+          // 1. Открываем ссылку в новом окне/вкладке
+          window.open(feedbackUrl, "_blank");
+
+          // 2. (Опционально) Закрываем модальное окно после клика
+          // Этот шаг требует, чтобы вы знали, как именно Bootstrap/другой фреймворк закрывает модальные окна.
+          // Если вы используете Bootstrap 5:
+          const modalElement = document.getElementById("feedbackModal");
+          const modal = bootstrap.Modal.getInstance(modalElement);
+          if (modal) {
+            modal.hide();
+          }
+          // Если вы не используете Bootstrap 5 или не хотите его закрывать, удалите этот блок.
+        });
+      }
     </script>
     <script src="static/script.js"></script>
 

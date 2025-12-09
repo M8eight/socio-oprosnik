@@ -881,7 +881,7 @@ body.modal-open {
 .visual-novel {
   background: url("https://static.vecteezy.com/system/resources/previews/003/532/746/non_2x/class-school-nobody-classroom-blackboard-table-chair-education-illustration-vector.jpg")
     center/cover no-repeat;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1097,7 +1097,6 @@ body.modal-open {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: bottom center;
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 /* Анимация персонажей */
@@ -1688,13 +1687,23 @@ body.modal-open {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Центральная панель с вопросом */
 #overlay-text {
-  background: rgba(255, 255, 255, 0.08);
+  /* background: rgba(255, 255, 255, 0.08); */
+  background: linear-gradient(
+    45deg,
+    rgba(17, 141, 145, 0.6),
+    rgba(121, 69, 133, 0.6),
+    rgba(197, 217, 46, 0.6)
+  );
   backdrop-filter: blur(30px);
   /* border: 2px solid rgba(17, 141, 145, 0.5); */
   border-radius: 25px;
@@ -1734,14 +1743,7 @@ body.modal-open {
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(
-    45deg,
-    rgba(17, 141, 145, 0.4),
-    rgba(121, 69, 133, 0.4),
-    rgba(197, 217, 46, 0.4)
-  );
   border-radius: 25px;
   z-index: -1;
   opacity: 0.7;
 }
-

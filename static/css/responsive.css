@@ -17,10 +17,9 @@
   }
 
   /* Персонажи на планшетах */
-  #charactersContainer {
+  /* #charactersContainer {
     bottom: 180px;
-    height: 55%;
-  }
+  } */
 
   .vn-character-sprite {
     max-width: 80%;
@@ -67,7 +66,7 @@
 
   .navbar-brand img {
     height: 40px;
-    max-width: 130px;
+    max-width: 110px;
   }
 
   .user-badge {
@@ -122,10 +121,9 @@
   }
 
   /* Персонажи */
-  #charactersContainer {
+  /* #charactersContainer {
     bottom: 160px;
-    height: 50%;
-  }
+  } */
 
   .vn-character-sprite {
     max-width: 75%;
@@ -216,10 +214,9 @@
   }
 
   /* Персонажи */
-  #charactersContainer {
+  /* #charactersContainer {
     bottom: 140px;
-    height: 45%;
-  }
+  } */
 
   .vn-character-sprite {
     max-width: 70%;
@@ -277,7 +274,7 @@
   /* Навбар */
   .navbar-brand img {
     height: 35px;
-    max-width: 100px;
+    max-width: 70px;
   }
 
   .user-badge {
@@ -340,10 +337,9 @@
   }
 
   /* Персонажи */
-  #charactersContainer {
+  /* #charactersContainer {
     bottom: 120px;
-    height: 40%;
-  }
+  } */
 
   .vn-character-sprite {
     max-width: 65%;
@@ -385,10 +381,9 @@
   }
 
   /* Персонажи в ландшафте */
-  #charactersContainer {
+  /* #charactersContainer {
     bottom: 120px;
-    height: 50%;
-  }
+  } */
 
   .vn-character-sprite {
     max-height: 90%;
@@ -442,10 +437,9 @@
     padding: 10px 20px;
   }
 
-  #charactersContainer {
+  /* #charactersContainer {
     bottom: 100px;
-    height: 45%;
-  }
+  } */
 
   .vn-controls {
     top: 5px;
@@ -483,7 +477,7 @@
 
 /* Фикс для 100vh на iOS */
 .visual-novel {
-  min-height: 100vh;
+  min-height: 100dvh;
   min-height: -webkit-fill-available;
 }
 

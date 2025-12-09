@@ -10,6 +10,8 @@ import database
 import json
 import os
 from typing import List
+from fastapi import Header, HTTPException, status
+from sqlalchemy import text
 
 # ==================== FastAPI app ====================
 app = FastAPI(title="Leaderboard API", openapi_url="/api/openapi.json", docs_url="/api/docs")
@@ -132,10 +134,6 @@ def save_stage_data(stage_data: schemas.StageSave, db: Session = Depends(databas
     db.refresh(db_stage)
     return {"message": msg}
 
-# ==================== СТАТИЧЕСКИЕ ФАЙЛЫ ====================
-# ВАЖНО: Порядок имеет значение! Самый общий маршрут "/" должен быть ПОСЛЕДНИМ
-
-# 1. Медиа-файлы (загруженные картинки)
 app.mount("/media", StaticFiles(directory="media"), name="media")
 
 # 2. Статические файлы (css/js/иконки)
