@@ -1,16 +1,15 @@
 // ==================== АВТООПРЕДЕЛЕНИЕ API URL ====================
-// Используем текущий хост браузера вместо жёсткого 127.0.0.1
 const hostname = window.location.hostname;
 const port = window.location.port;
 
 // Проверяем, существует ли порт. Если да, добавляем двоеточие и порт.
-// Если нет (пустая строка на продакшене), добавляем пустую строку.
 const portSuffix = port ? `:${port}` : '';
 
 const API_BASE_URL = `${window.location.protocol}//${hostname}${portSuffix}`;
 
-console.log("🌐 API Base URL:", API_BASE_URL); // Для отладки
+// console.log("API URL:", API_BASE_URL); // Для отладки
 
+//URLS
 const LEADERBOARD_URL = `${API_BASE_URL}/leaderboard/`;
 const SUBMIT_SCORE_URL = `${API_BASE_URL}/submit-score/`;
 const GET_STAGE_URL = (stageNum) => `${API_BASE_URL}/stage/${stageNum}`;
@@ -18,6 +17,7 @@ const GET_PROGRESS_BASE_URL = `${API_BASE_URL}/get-progress/`;
 
 const MAX_THEORY_STAGE = 1;
 const MAX_PRACTICE_STAGE = 5;
+
 // Общее количество этапов
 const MAX_TOTAL_STAGE = MAX_THEORY_STAGE + MAX_PRACTICE_STAGE;
 
@@ -84,11 +84,9 @@ async function fetchUserProgress() {
         globalUserScore = data.score || 0;
         globalUserStage = data.stage || 0;
 
-        console.log(`✅ Прогресс загружен с сервера: score=${globalUserScore}, stage=${globalUserStage}`);
         updateUI(globalUserScore, globalUserStage);
 
     } catch (error) {
-        console.error("❌ Ошибка при загрузке прогресса:", error);
         updateUI(globalUserScore, globalUserStage);
     }
 }
@@ -99,10 +97,6 @@ async function submitScore(score, stage) {
         console.error("Имя пользователя не найдено. Невозможно отправить счет.");
         return;
     }
-
-    console.log(`📊 submitScore вызван:`);
-    console.log(`   - Полное имя (username): "${fullName}"`);
-    console.log(`   - score: ${score}, stage: ${stage}`);
 
     try {
         const payload = {
